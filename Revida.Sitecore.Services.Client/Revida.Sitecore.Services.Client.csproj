@@ -47,10 +47,17 @@
     <Compile Include="ISitecoreServiceClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SitecoreClientFactory.cs" />
+    <Compile Include="SitecoreWebApiServiceClient.cs" />
     <Compile Include="SitecoreItemServiceClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Revida.Sitecore.Assurance.Configuration\Revida.Sitecore.Assurance.Configuration.csproj">
+      <Project>{d845c3aa-17a4-43a1-9edf-3798ca860787}</Project>
+      <Name>Revida.Sitecore.Assurance.Configuration</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

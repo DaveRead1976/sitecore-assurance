@@ -14,7 +14,9 @@ namespace Revida.Sitecore.Assurance.Tests
             var args = new string[0];
             
             // Act / Assert
-            Assert.Throws<InvalidCommandLineArgumentsException>(() => ConfigurationParameterParser.ParseCommandLineArgs(args));
+            Assert.Throws<InvalidCommandLineArgumentsException>(
+                () => ConfigurationParameterParser.ParseCommandLineArgs(args),
+                "No command line arguments supplied");
         }
 
         [Test]
@@ -24,17 +26,21 @@ namespace Revida.Sitecore.Assurance.Tests
             string[] args = null;
             
             // Act / Assert
-            Assert.Throws<InvalidCommandLineArgumentsException>(() => ConfigurationParameterParser.ParseCommandLineArgs(args));
+            Assert.Throws<InvalidCommandLineArgumentsException>(
+                () => ConfigurationParameterParser.ParseCommandLineArgs(args),
+                "No command line arguments supplied");
         }
         
         [Test]
-        public void Arguments_contain_root_node_but_no_sitecore_version()
+        public void Arguments_contain_root_node_and_base_url_but_no_sitecore_version()
         {
             // Arrange
-            var args = new string[2];
+            var args = new string[4];
             Guid rootNodeGuid = Guid.NewGuid();
             args[0] = "-r";
             args[1] = rootNodeGuid.ToString();
+            args[2] = "-u";
+            args[3] = "http://www.baseurl.com";
             
             // Act
             var configurationParameters = ConfigurationParameterParser.ParseCommandLineArgs(args);
@@ -42,25 +48,67 @@ namespace Revida.Sitecore.Assurance.Tests
             // Assert
             Assert.AreEqual(rootNodeGuid, configurationParameters.RootNodeId);
             Assert.AreEqual(SitecoreClientVersion.SiteCoreServicesClient, configurationParameters.SiteCoreClient);
+            Assert.AreEqual("http://www.baseurl.com", configurationParameters.BaseUrl);
         }
 
         [Test]
-        public void Arguments_contain_root_node_and_sitecore_version()
+        public void Arguments_contain_root_node_and_sitecore_version_but_no_base_url()
         {
             // Arrange
             var args = new string[4];
+            args[0] = "-r";
+            Guid rootNodeGuid = Guid.NewGuid();
+            args[1] = rootNodeGuid.ToString();
+            args[2] = "-s";
+            args[3] = "6";
+
+            // Act / Assert
+            Assert.Throws<InvalidCommandLineArgumentsException>(
+                () => ConfigurationParameterParser.ParseCommandLineArgs(args),
+                "Base url is required");
+        }
+
+        [Test]
+        public void Arguments_contain_short_version_root_node_sitecore_version_and_base_url()
+        {
+            // Arrange
+            var args = new string[6];
             Guid rootNodeGuid = Guid.NewGuid();
             args[0] = "-r";
             args[1] = rootNodeGuid.ToString();
             args[2] = "-s";
             args[3] = "6";
-            
+            args[4] = "-u";
+            args[5] = "http://baseurl.com";
             // Act
             var configurationParameters = ConfigurationParameterParser.ParseCommandLineArgs(args);
 
             // Assert
             Assert.AreEqual(rootNodeGuid, configurationParameters.RootNodeId);
             Assert.AreEqual(SitecoreClientVersion.ItemWebApi, configurationParameters.SiteCoreClient);
+            Assert.AreEqual("http://baseurl.com", configurationParameters.BaseUrl);
+        }
+
+        [Test]
+        public void Arguments_contain_long_version_root_node__sitecore_version_and_base_url()
+        {
+            // Arrange
+            var args = new string[6];
+            Guid rootNodeGuid = Guid.NewGuid();
+            args[0] = "--root";
+            args[1] = rootNodeGuid.ToString();
+            args[2] = "--service";
+            args[3] = "6";
+            args[4] = "--baseurl";
+            args[5] = "http://www.baseurl.com";
+
+            // Act
+            var configurationParameters = ConfigurationParameterParser.ParseCommandLineArgs(args);
+
+            // Assert
+            Assert.AreEqual(rootNodeGuid, configurationParameters.RootNodeId);
+            Assert.AreEqual(SitecoreClientVersion.ItemWebApi, configurationParameters.SiteCoreClient);
+            Assert.AreEqual("http://www.baseurl.com", configurationParameters.BaseUrl);
         }
 
         [Test]
@@ -72,7 +120,24 @@ namespace Revida.Sitecore.Assurance.Tests
             args[1] = "6";
             
             // Act / Assert
-            Assert.Throws<InvalidCommandLineArgumentsException>(() => ConfigurationParameterParser.ParseCommandLineArgs(args));
+            Assert.Throws<InvalidCommandLineArgumentsException>(
+                () => ConfigurationParameterParser.ParseCommandLineArgs(args),
+                "Root node id is required");
+        }
+
+        [Test]
+        public void Arguments_contain_root_node_but_no_base_url_or_sitecore_version()
+        {
+            // Arrange
+            var args = new string[2];
+            Guid rootNodeGuid = Guid.NewGuid();
+            args[0] = "--root";
+            args[1] = rootNodeGuid.ToString();
+
+            // Act / Assert
+            Assert.Throws<InvalidCommandLineArgumentsException>(
+                () => ConfigurationParameterParser.ParseCommandLineArgs(args),
+                "Base url is required");
         }
     }
 }

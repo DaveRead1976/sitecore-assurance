@@ -20,7 +20,8 @@ namespace Revida.Sitecore.Assurance.Console
             }
             catch (InvalidCommandLineArgumentsException)
             {
-                System.Console.WriteLine("Usage: sitecore-assurance -r {root node guid} [-s {service version}]");
+                System.Console.WriteLine("Usage: sitecore-assurance -r {root node guid} -u {base url} [-s {service version}]");
+                System.Console.WriteLine("       sitecore-assurance --root {root node guid} -baseurl {base url} [--service {service version}]");                
                 return;
             }
 

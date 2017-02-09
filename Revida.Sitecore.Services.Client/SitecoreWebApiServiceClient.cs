@@ -2,7 +2,7 @@
 
 namespace Revida.Sitecore.Services.Client
 {
-    public class SitecoreItemServiceClient : ISitecoreServiceClient
+    public class SitecoreWebApiServiceClient : ISitecoreServiceClient
     {
     }
 }

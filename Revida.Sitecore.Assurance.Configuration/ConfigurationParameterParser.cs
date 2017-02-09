@@ -32,6 +32,8 @@ namespace Revida.Sitecore.Assurance.Configuration
 
             ParseRootNodeParameter(options.Root, parameters);
 
+            ParseBaseUrlParameter(options.BaseUrl, parameters);
+
             ParseOptionalServiceVersionParameter(options.Service, parameters);
 
             return parameters;
@@ -57,7 +59,19 @@ namespace Revida.Sitecore.Assurance.Configuration
                 throw new InvalidCommandLineArgumentsException("Root node id is required");
             }
         }
-        
+
+        private static void ParseBaseUrlParameter(string baseUrl, ConfigurationParameters parameters)
+        {
+            if (!String.IsNullOrEmpty(baseUrl))
+            {
+                parameters.BaseUrl = baseUrl;
+            }
+            else
+            {
+                throw new InvalidCommandLineArgumentsException("Base url is required");
+            }
+        }
+
         private static void ParseOptionalServiceVersionParameter(string service, ConfigurationParameters parameters)
         {
             if (!String.IsNullOrEmpty(service))
