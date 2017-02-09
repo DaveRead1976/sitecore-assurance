@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Revida.Sitecore.Assurance.Tests", "Revida.Sitecore.Assurance.Tests\Revida.Sitecore.Assurance.Tests.csproj", "{E74721F9-3023-496A-A704-BD69B634E64A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Revida.Sitecore.Assurance.Console", "Revida.Sitecore.Assurance.Console\Revida.Sitecore.Assurance.Console.csproj", "{57627067-2185-42F8-8F40-23C5F318DF26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Revida.Sitecore.Services.Client", "Revida.Sitecore.Services.Client\Revida.Sitecore.Services.Client.csproj", "{D72D1048-0A03-43AF-969E-1126DFBFA778}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Revida.Sitecore.Assurance.PageCheckers", "Revida.Sitecore.Assurance.PageCheckers\Revida.Sitecore.Assurance.PageCheckers.csproj", "{16089382-5754-43BD-B2D7-071B8470DF68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Revida.Sitecore.Assurance.Configuration", "Revida.Sitecore.Assurance.Configuration\Revida.Sitecore.Assurance.Configuration.csproj", "{D845C3AA-17A4-43A1-9EDF-3798CA860787}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E74721F9-3023-496A-A704-BD69B634E64A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E74721F9-3023-496A-A704-BD69B634E64A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E74721F9-3023-496A-A704-BD69B634E64A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E74721F9-3023-496A-A704-BD69B634E64A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57627067-2185-42F8-8F40-23C5F318DF26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57627067-2185-42F8-8F40-23C5F318DF26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57627067-2185-42F8-8F40-23C5F318DF26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57627067-2185-42F8-8F40-23C5F318DF26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D72D1048-0A03-43AF-969E-1126DFBFA778}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D72D1048-0A03-43AF-969E-1126DFBFA778}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D72D1048-0A03-43AF-969E-1126DFBFA778}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D72D1048-0A03-43AF-969E-1126DFBFA778}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16089382-5754-43BD-B2D7-071B8470DF68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16089382-5754-43BD-B2D7-071B8470DF68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16089382-5754-43BD-B2D7-071B8470DF68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16089382-5754-43BD-B2D7-071B8470DF68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D845C3AA-17A4-43A1-9EDF-3798CA860787}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D845C3AA-17A4-43A1-9EDF-3798CA860787}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D845C3AA-17A4-43A1-9EDF-3798CA860787}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D845C3AA-17A4-43A1-9EDF-3798CA860787}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
