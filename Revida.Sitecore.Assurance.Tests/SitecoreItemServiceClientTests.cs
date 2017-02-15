@@ -211,12 +211,12 @@ namespace Revida.Sitecore.Assurance.Tests
             // Assert
             Assert.IsNotNull(urlList);
             Assert.AreEqual(6, urlList.Length);
-            Assert.AreEqual("http://baseurl.com/item/url", urlList[0]);
-            Assert.AreEqual("http://baseurl.com/item/url/child1", urlList[1]);
-            Assert.AreEqual("http://baseurl.com/item/url/child2", urlList[2]);
-            Assert.AreEqual("http://baseurl.com/item/url2", urlList[3]);
-            Assert.AreEqual("http://baseurl.com/item/url2/child3", urlList[4]);
-            Assert.AreEqual("http://baseurl.com/item/url2/child4", urlList[5]);
+            Assert.AreEqual("/item/url", urlList[0].ItemUrl);
+            Assert.AreEqual("/item/url/child1", urlList[1].ItemUrl);
+            Assert.AreEqual("/item/url/child2", urlList[2].ItemUrl);
+            Assert.AreEqual("/item/url2", urlList[3].ItemUrl);
+            Assert.AreEqual("/item/url2/child3", urlList[4].ItemUrl);
+            Assert.AreEqual("/item/url2/child4", urlList[5].ItemUrl);
         }
 
         [Test]
@@ -352,16 +352,16 @@ namespace Revida.Sitecore.Assurance.Tests
             // Assert
             Assert.IsNotNull(urlList);
             Assert.AreEqual(10, urlList.Length);
-            Assert.AreEqual("http://baseurl.com/item/url", urlList[0]);
-            Assert.AreEqual("http://baseurl.com/item/url/child1", urlList[1]);
-            Assert.AreEqual("http://baseurl.com/item/url/child2", urlList[2]);
-            Assert.AreEqual("http://baseurl.com/item/url/child2/subchild1", urlList[3]);
-            Assert.AreEqual("http://baseurl.com/item/url/child2/subchild2", urlList[4]);                        
-            Assert.AreEqual("http://baseurl.com/item/url2", urlList[5]);
-            Assert.AreEqual("http://baseurl.com/item/url2/child3", urlList[6]);
-            Assert.AreEqual("http://baseurl.com/item/url/child3/subchild1", urlList[7]);
-            Assert.AreEqual("http://baseurl.com/item/url/child3/subchild2", urlList[8]);
-            Assert.AreEqual("http://baseurl.com/item/url2/child4", urlList[9]);
+            Assert.AreEqual("/item/url", urlList[0].ItemUrl);
+            Assert.AreEqual("/item/url/child1", urlList[1].ItemUrl);
+            Assert.AreEqual("/item/url/child2", urlList[2].ItemUrl);
+            Assert.AreEqual("/item/url/child2/subchild1", urlList[3].ItemUrl);
+            Assert.AreEqual("/item/url/child2/subchild2", urlList[4].ItemUrl);                        
+            Assert.AreEqual("/item/url2", urlList[5].ItemUrl);
+            Assert.AreEqual("/item/url2/child3", urlList[6].ItemUrl);
+            Assert.AreEqual("/item/url/child3/subchild1", urlList[7].ItemUrl);
+            Assert.AreEqual("/item/url/child3/subchild2", urlList[8].ItemUrl);
+            Assert.AreEqual("/item/url2/child4", urlList[9].ItemUrl);
         }
     }
 }

@@ -19,17 +19,17 @@ namespace Revida.Sitecore.Services.Client
             ConfigurationParameters = configurationParameters;
         }
 
-        public List<string> GetSitecoreCmsTreeUrls()
+        public List<SitecoreItem> GetSitecoreCmsTreeUrls()
         {
             Uri baseUri = new Uri(ConfigurationParameters.BaseUrl);
-            List<string> sitecoreUrls = new List<string>();
+            List<SitecoreItem> sitecoreUrls = new List<SitecoreItem>();
 
             Guid rootNodeId = ConfigurationParameters.RootNodeId;
 
             return ParseUrlTree(baseUri, rootNodeId, sitecoreUrls); 
         }
 
-        private List<string> ParseUrlTree(Uri baseUri, Guid rootNodeId, List<string> sitecoreUrls)
+        private List<SitecoreItem> ParseUrlTree(Uri baseUri, Guid rootNodeId, List<SitecoreItem> sitecoreUrls)
         {
             Uri serviceEndpointUrl = new Uri(string.Format(ItemUrlFormatString, baseUri.Host, rootNodeId));
 
@@ -43,8 +43,7 @@ namespace Revida.Sitecore.Services.Client
 
             foreach (SitecoreItem item in items)
             {
-                Uri itemUrl = new Uri(baseUri, item.ItemUrl);
-                sitecoreUrls.Add(itemUrl.ToString());
+                sitecoreUrls.Add(item);
                 if (item.HasChildren)
                 {
                     sitecoreUrls = ParseUrlTree(baseUri, item.ItemID, sitecoreUrls);

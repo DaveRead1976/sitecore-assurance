@@ -47,6 +47,7 @@
     <Compile Include="HttpWebRequestFactory.cs" />
     <Compile Include="IHttpWebRequestFactory.cs" />
     <Compile Include="PageCheckersModule.cs" />
+    <Compile Include="PageCheckResult.cs" />
     <Compile Include="PageHttpResponseChecker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

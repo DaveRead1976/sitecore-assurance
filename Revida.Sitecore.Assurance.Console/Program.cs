@@ -1,4 +1,5 @@
-﻿using System.CodeDom;
+﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using Autofac;
 using RestSharp;
@@ -30,18 +31,40 @@ namespace Revida.Sitecore.Assurance.Console
             System.Console.WriteLine("Sitecore Client Version: " + Config.SiteCoreClient);
             System.Console.WriteLine("Root Node GUID: " + Config.RootNodeId);
 
+            List<SitecoreItem> sitecoreItems = TraverseSitecoreContentTree();
+
+            System.Console.WriteLine(sitecoreItems.Count + " Sitecore URLs found in content tree" );
+
+            PerformChecksOnSitecoreItems(sitecoreItems);
+        }
+
+        private static void PerformChecksOnSitecoreItems(List<SitecoreItem> sitecoreItems)
+        {
+            if (sitecoreItems.Count > 0)
+            {
+                System.Console.WriteLine("Success?\tStatus Code\tItem path");
+            }
+
+            PageHttpResponseChecker checker = Container.Resolve<PageHttpResponseChecker>();
+
+            foreach (SitecoreItem sitecoreItem in sitecoreItems)
+            {
+                Uri pageUrl = new Uri($"{Config.BaseUrl}/{sitecoreItem.ItemUrl}");
+
+                PageCheckResult result = checker.PageResponseValid(pageUrl);
+
+                System.Console.WriteLine($"{result.Success}\t{result.StatusCode}\t{sitecoreItem.ItemPath}");
+            }
+        }
+
+        private static List<SitecoreItem> TraverseSitecoreContentTree()
+        {
             IRestClient restClient = Container.Resolve<IRestClient>();
             SitecoreClientFactory factory = new SitecoreClientFactory(restClient, Config);
             ISitecoreServiceClient sitecoreServiceClient = factory.GetServiceClient();
 
-            List<string> sitecoreUrls = sitecoreServiceClient.GetSitecoreCmsTreeUrls();
-
-            System.Console.WriteLine(sitecoreUrls.Count + " Sitecore URLs found in content tree" );
-
-            foreach (var url in sitecoreUrls)
-            {
-                System.Console.WriteLine(url);
-            }
+            List<SitecoreItem> sitecoreUrls = sitecoreServiceClient.GetSitecoreCmsTreeUrls();
+            return sitecoreUrls;
         }
 
         private static void RegisterIocModules()

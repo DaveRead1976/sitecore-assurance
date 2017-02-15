@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Net;
 
 namespace Revida.Sitecore.Assurance.PageCheckers
@@ -12,15 +13,31 @@ namespace Revida.Sitecore.Assurance.PageCheckers
             RequestFactory = requestFactory;
         }
 
-        public bool PageResponseValid(string pageUrl)
+        public PageCheckResult PageResponseValid(Uri pageUrl)
         {
-            var httpWebRequest = RequestFactory.Create(pageUrl);
-            httpWebRequest.AllowAutoRedirect = false;
-            var response = (HttpWebResponse)httpWebRequest.GetResponse();
+            try
+            {
+                var httpWebRequest = RequestFactory.Create(pageUrl.AbsoluteUri);
+                httpWebRequest.AllowAutoRedirect = false;
+                var response = (HttpWebResponse) httpWebRequest.GetResponse();
 
-            return (response.StatusCode == HttpStatusCode.OK || 
-                    response.StatusCode == HttpStatusCode.Moved || 
-                    response.StatusCode == HttpStatusCode.Redirect);
+                bool success = (response.StatusCode == HttpStatusCode.OK ||
+                        response.StatusCode == HttpStatusCode.Moved ||
+                        response.StatusCode == HttpStatusCode.Redirect);
+
+                return new PageCheckResult {Success = success, StatusCode = response.StatusCode};
+            }
+            catch (WebException webException)
+            {
+                if (webException.Status == WebExceptionStatus.Timeout)
+                {
+                    return new PageCheckResult {Success = false, StatusCode = HttpStatusCode.RequestTimeout};
+                }
+
+                HttpWebResponse exceptionResponse = (HttpWebResponse) webException.Response;
+
+                return new PageCheckResult { Success = false, StatusCode = exceptionResponse.StatusCode };
+            }
         }
     }
 }

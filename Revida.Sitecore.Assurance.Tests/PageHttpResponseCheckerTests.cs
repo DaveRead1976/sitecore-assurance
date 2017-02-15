@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using Moq;
 using NUnit.Framework;
 using Revida.Sitecore.Assurance.PageCheckers;
@@ -32,10 +33,10 @@ namespace Revida.Sitecore.Assurance.Tests
             var pageChecker = new PageHttpResponseChecker(factory.Object);
 
             // Act
-            var isValid = pageChecker.PageResponseValid("http://test.com");
+            var isValid = pageChecker.PageResponseValid(new Uri("http://test.com"));
 
             // Assert
-            Assert.AreEqual(expectedIsValid, isValid);
+            Assert.AreEqual(expectedIsValid, isValid.Success);
         }
     }
 }

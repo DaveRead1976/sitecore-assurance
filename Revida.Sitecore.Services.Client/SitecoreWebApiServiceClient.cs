@@ -17,7 +17,7 @@ namespace Revida.Sitecore.Services.Client
             ConfigurationParameters = configurationParameters;
         }
         
-        public List<string> GetSitecoreCmsTreeUrls()
+        public List<SitecoreItem> GetSitecoreCmsTreeUrls()
         {
             throw new NotImplementedException();
         }
