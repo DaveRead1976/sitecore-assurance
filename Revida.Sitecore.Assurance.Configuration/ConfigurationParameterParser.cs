@@ -51,7 +51,7 @@ namespace Revida.Sitecore.Assurance.Configuration
                 }
                 else
                 {
-                    throw new InvalidCommandLineArgumentsException("Root node id is required");
+                    throw new InvalidCommandLineArgumentsException("Root node id is invalid");
                 }
             }
             else
@@ -64,12 +64,15 @@ namespace Revida.Sitecore.Assurance.Configuration
         {
             if (!String.IsNullOrEmpty(baseUrl))
             {
-                parameters.BaseUrl = baseUrl;
+                Uri parseUri; 
+                bool isValid = Uri.TryCreate(baseUrl, UriKind.Absolute, out parseUri);
+                if (isValid)
+                {
+                    parameters.BaseUrl = baseUrl;
+                    return;
+                }
             }
-            else
-            {
-                throw new InvalidCommandLineArgumentsException("Base url is required");
-            }
+            throw new InvalidCommandLineArgumentsException("Base url is required");        
         }
 
         private static void ParseOptionalServiceVersionParameter(string service, ConfigurationParameters parameters)

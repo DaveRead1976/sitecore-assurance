@@ -139,5 +139,42 @@ namespace Revida.Sitecore.Assurance.Tests
                 () => ConfigurationParameterParser.ParseCommandLineArgs(args),
                 "Base url is required");
         }
+
+        [Test]
+        public void Arguments_contain_invalid_url()
+        {
+            // Arrange
+            var args = new string[6];
+            Guid rootNodeGuid = Guid.NewGuid();
+            args[0] = "--root";
+            args[1] = rootNodeGuid.ToString();
+            args[2] = "--service";
+            args[3] = "6";
+            args[4] = "--baseurl";
+            args[5] = "^7";
+
+            // Act / Assert
+            Assert.Throws<InvalidCommandLineArgumentsException>(
+                () => ConfigurationParameterParser.ParseCommandLineArgs(args),
+                "Base url is invalid");
+        }
+
+        [Test]
+        public void Arguments_contain_invalid_root_node_id()
+        {
+            // Arrange
+            var args = new string[6];
+            args[0] = "--root";
+            args[1] = "abv5";
+            args[2] = "--service";
+            args[3] = "6";
+            args[4] = "--baseurl";
+            args[5] = "http://www.baseurl.com";
+
+            // Act / Assert
+            Assert.Throws<InvalidCommandLineArgumentsException>(
+                () => ConfigurationParameterParser.ParseCommandLineArgs(args),
+                "Root node id is invalid");
+        }
     }
 }

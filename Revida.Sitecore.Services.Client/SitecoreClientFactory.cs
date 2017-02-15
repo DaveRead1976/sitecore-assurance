@@ -1,14 +1,17 @@
-﻿
+﻿using RestSharp;
 using Revida.Sitecore.Assurance.Configuration;
 
 namespace Revida.Sitecore.Services.Client
 {
     public class SitecoreClientFactory
     {
-        private ConfigurationParameters ConfigurationParameters { get; set; }
+        private ConfigurationParameters ConfigurationParameters { get; }
 
-        public SitecoreClientFactory(ConfigurationParameters configurationSettings)
+        private IRestClient ServiceClient { get; }
+
+        public SitecoreClientFactory(IRestClient serviceClient, ConfigurationParameters configurationSettings)
         {
+            ServiceClient = serviceClient;
             ConfigurationParameters = configurationSettings;
         }
 
@@ -17,10 +20,10 @@ namespace Revida.Sitecore.Services.Client
             switch (ConfigurationParameters.SiteCoreClient)
             {
                 case SitecoreClientVersion.ItemWebApi:
-                    return new SitecoreWebApiServiceClient();
+                    return new SitecoreWebApiServiceClient(ServiceClient, ConfigurationParameters);
 
                 default:
-                    return new SitecoreItemServiceClient();
+                    return new SitecoreItemServiceClient(ServiceClient, ConfigurationParameters);
             }
 
         }

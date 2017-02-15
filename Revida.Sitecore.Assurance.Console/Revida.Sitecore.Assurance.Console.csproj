@@ -37,6 +37,10 @@
       <HintPath>..\packages\Autofac.4.3.0\lib\net45\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net452\RestSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -62,6 +66,10 @@
     <ProjectReference Include="..\Revida.Sitecore.Assurance.PageCheckers\Revida.Sitecore.Assurance.PageCheckers.csproj">
       <Project>{16089382-5754-43BD-B2D7-071B8470DF68}</Project>
       <Name>Revida.Sitecore.Assurance.PageCheckers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Revida.Sitecore.Services.Client\Revida.Sitecore.Services.Client.csproj">
+      <Project>{d72d1048-0a03-43af-969e-1126dfbfa778}</Project>
+      <Name>Revida.Sitecore.Services.Client</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
