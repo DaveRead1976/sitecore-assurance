@@ -8,6 +8,8 @@ using Revida.Sitecore.Services.Client;
 
 namespace Revida.Sitecore.Assurance.Tests
 {
+    using System.Net;
+
     [TestFixture]
     public class SitecoreItemServiceClientTests
     {
@@ -22,7 +24,32 @@ namespace Revida.Sitecore.Assurance.Tests
             };
             var restClient = new Mock<IRestClient>();
 
-            var response = new RestResponse<List<SitecoreItem>> { Data = new List<SitecoreItem>() };
+            var response = new RestResponse<List<SitecoreItem>> { Data = new List<SitecoreItem>(), StatusCode = HttpStatusCode.OK };
+
+            restClient.Setup(x => x.Execute<List<SitecoreItem>>(It.IsAny<IRestRequest>())).Returns(response);
+
+            var serviceClient = new SitecoreItemServiceClient(restClient.Object, configurationParameters);
+
+            // Act
+            var urlList = serviceClient.GetSitecoreCmsTreeUrls();
+
+            // Assert
+            Assert.IsNotNull(urlList);
+            Assert.IsEmpty(urlList);
+        }
+
+        [Test]
+        public void Service_client_handles_null_response()
+        {
+            // Arrange
+            var configurationParameters = new ConfigurationParameters
+            {
+                BaseUrl = "http://baseurl.com",
+                RootNodeId = Guid.NewGuid()
+            };
+            var restClient = new Mock<IRestClient>();
+
+            var response = new RestResponse<List<SitecoreItem>> { Data = null, StatusCode = HttpStatusCode.OK };
 
             restClient.Setup(x => x.Execute<List<SitecoreItem>>(It.IsAny<IRestRequest>())).Returns(response);
 
@@ -59,7 +86,7 @@ namespace Revida.Sitecore.Assurance.Tests
                 }
             };
 
-            var response = new RestResponse<List<SitecoreItem>> { Data = itemList };
+            var response = new RestResponse<List<SitecoreItem>> { Data = itemList, StatusCode = HttpStatusCode.OK };
 
             restClient.Setup(x => x.Execute<List<SitecoreItem>>(It.IsAny<IRestRequest>())).Returns(response);
 
@@ -104,7 +131,7 @@ namespace Revida.Sitecore.Assurance.Tests
                 }
             };
 
-            var response = new RestResponse<List<SitecoreItem>> { Data = itemList };
+            var response = new RestResponse<List<SitecoreItem>> { Data = itemList, StatusCode = HttpStatusCode.OK };
 
             restClient.Setup(x => x.Execute<List<SitecoreItem>>(It.IsAny<IRestRequest>())).Returns(response);
 
@@ -150,7 +177,7 @@ namespace Revida.Sitecore.Assurance.Tests
                 }
             };
 
-            var topLevelResponse = new RestResponse<List<SitecoreItem>> { Data = topLevelItemList };
+            var topLevelResponse = new RestResponse<List<SitecoreItem>> { Data = topLevelItemList, StatusCode = HttpStatusCode.OK };
 
             var firstChildItemList = new List<SitecoreItem>
             {
@@ -172,7 +199,7 @@ namespace Revida.Sitecore.Assurance.Tests
                 }
             };
 
-            var firstChildResponse = new RestResponse<List<SitecoreItem>> { Data = firstChildItemList };
+            var firstChildResponse = new RestResponse<List<SitecoreItem>> { Data = firstChildItemList, StatusCode = HttpStatusCode.OK };
 
             var secondChildItemList = new List<SitecoreItem>
             {
@@ -194,7 +221,7 @@ namespace Revida.Sitecore.Assurance.Tests
                 }
             };
 
-            var secondChildResponse = new RestResponse<List<SitecoreItem>> { Data = secondChildItemList };
+            var secondChildResponse = new RestResponse<List<SitecoreItem>> { Data = secondChildItemList, StatusCode = HttpStatusCode.OK };
 
             restClient.Setup(x => x.Execute<List<SitecoreItem>>(It.IsAny<IRestRequest>()))
                                         .ReturnsInOrder(topLevelResponse, firstChildResponse, secondChildResponse);
@@ -246,7 +273,7 @@ namespace Revida.Sitecore.Assurance.Tests
                 }
             };
 
-            var topLevelResponse = new RestResponse<List<SitecoreItem>> { Data = topLevelItemList };
+            var topLevelResponse = new RestResponse<List<SitecoreItem>> { Data = topLevelItemList, StatusCode = HttpStatusCode.OK };
 
             var firstChildItemList = new List<SitecoreItem>
             {
@@ -268,7 +295,7 @@ namespace Revida.Sitecore.Assurance.Tests
                 }
             };
 
-            var firstChildResponse = new RestResponse<List<SitecoreItem>> { Data = firstChildItemList };
+            var firstChildResponse = new RestResponse<List<SitecoreItem>> { Data = firstChildItemList, StatusCode = HttpStatusCode.OK };
 
             var child2ChildrenItemList = new List<SitecoreItem>
             {
@@ -290,7 +317,7 @@ namespace Revida.Sitecore.Assurance.Tests
                 }
             };
 
-            var child2ChildrenResponse = new RestResponse<List<SitecoreItem>> { Data = child2ChildrenItemList };
+            var child2ChildrenResponse = new RestResponse<List<SitecoreItem>> { Data = child2ChildrenItemList, StatusCode = HttpStatusCode.OK };
 
             var secondChildItemList = new List<SitecoreItem>
             {
@@ -312,7 +339,7 @@ namespace Revida.Sitecore.Assurance.Tests
                 }
             };
 
-            var secondChildResponse = new RestResponse<List<SitecoreItem>> { Data = secondChildItemList };
+            var secondChildResponse = new RestResponse<List<SitecoreItem>> { Data = secondChildItemList, StatusCode = HttpStatusCode.OK };
             
             var child3ChildrenItemList = new List<SitecoreItem>
             {
@@ -334,7 +361,7 @@ namespace Revida.Sitecore.Assurance.Tests
                 }
             };
 
-            var child3ChildrenResponse = new RestResponse<List<SitecoreItem>> { Data = child3ChildrenItemList };
+            var child3ChildrenResponse = new RestResponse<List<SitecoreItem>> { Data = child3ChildrenItemList, StatusCode = HttpStatusCode.OK };
 
             restClient.Setup(x => x.Execute<List<SitecoreItem>>(It.IsAny<IRestRequest>()))
             .ReturnsInOrder(topLevelResponse, firstChildResponse, child2ChildrenResponse, secondChildResponse, child3ChildrenResponse);
@@ -357,6 +384,27 @@ namespace Revida.Sitecore.Assurance.Tests
             Assert.AreEqual("/item/url/child3/subchild1", urlList[7].ItemUrl);
             Assert.AreEqual("/item/url/child3/subchild2", urlList[8].ItemUrl);
             Assert.AreEqual("/item/url2/child4", urlList[9].ItemUrl);
+        }
+
+        [Test]        
+        public void Service_client_throws_exception_if_not_authorised()
+        {
+            // Arrange
+            var configurationParameters = new ConfigurationParameters
+            {
+                BaseUrl = "http://baseurl.com",
+                RootNodeId = Guid.NewGuid()
+            };
+            var restClient = new Mock<IRestClient>();
+
+            var response = new RestResponse<List<SitecoreItem>> { Data = new List<SitecoreItem>(), StatusCode = HttpStatusCode.Forbidden };
+
+            restClient.Setup(x => x.Execute<List<SitecoreItem>>(It.IsAny<IRestRequest>())).Returns(response);
+
+            var serviceClient = new SitecoreItemServiceClient(restClient.Object, configurationParameters);
+            
+            // Act / Assert
+            Assert.Throws<ServiceClientAuthorizationException>(() => serviceClient.GetSitecoreCmsTreeUrls());
         }
     }
 }

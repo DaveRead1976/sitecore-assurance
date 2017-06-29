@@ -5,6 +5,8 @@ using Revida.Sitecore.Assurance.Configuration;
 
 namespace Revida.Sitecore.Services.Client
 {
+    using System.Net;
+
     public class SitecoreItemServiceClient : ISitecoreServiceClient
     {
         private const string ItemUrlFormatString = "http://{0}/sitecore/api/ssc/item/{1}/children";
@@ -38,15 +40,23 @@ namespace Revida.Sitecore.Services.Client
             request.Method = Method.GET;
             
             IRestResponse<List<SitecoreItem>> response = ServiceClient.Execute<List<SitecoreItem>>(request);
-            
-            List<SitecoreItem> items = response.Data;
 
-            foreach (SitecoreItem item in items)
+            if (response.StatusCode == HttpStatusCode.Forbidden)
             {
-                sitecoreUrls.Add(item);
-                if (item.HasChildren)
+                throw new ServiceClientAuthorizationException("Access denied when connecting to Sitecore Service Client");
+            }
+
+            if (response.StatusCode == HttpStatusCode.OK && response.Data != null)
+            {
+                List<SitecoreItem> items = response.Data;
+
+                foreach (SitecoreItem item in items)
                 {
-                    sitecoreUrls = ParseUrlTree(baseUri, item.ItemID, sitecoreUrls);
+                    sitecoreUrls.Add(item);
+                    if (item.HasChildren)
+                    {
+                        sitecoreUrls = ParseUrlTree(baseUri, item.ItemID, sitecoreUrls);
+                    }
                 }
             }
             return sitecoreUrls;

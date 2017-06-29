@@ -60,8 +60,17 @@ namespace Revida.Sitecore.Assurance.Console
             IRestClient restClient = Container.Resolve<IRestClient>();
             ISitecoreServiceClient sitecoreServiceClient =  new SitecoreItemServiceClient(restClient, Config);
 
-            List<SitecoreItem> sitecoreUrls = sitecoreServiceClient.GetSitecoreCmsTreeUrls();
-            return sitecoreUrls;
+            try
+            {
+                List<SitecoreItem> sitecoreUrls = sitecoreServiceClient.GetSitecoreCmsTreeUrls();
+                return sitecoreUrls;
+            }
+            catch (ServiceClientAuthorizationException)
+            {
+                System.Console.WriteLine("Unable to connect to Sitecore Services Client with the supplied credentials");
+                Environment.Exit(1);
+            }
+            return null;
         }
 
         private static void RegisterIocModules()
