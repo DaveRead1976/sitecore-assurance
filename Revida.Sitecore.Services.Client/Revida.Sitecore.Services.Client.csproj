@@ -51,9 +51,7 @@
     <Compile Include="ISitecoreServiceClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServicesClientModule.cs" />
-    <Compile Include="SitecoreClientFactory.cs" />
     <Compile Include="SitecoreItem.cs" />
-    <Compile Include="SitecoreWebApiServiceClient.cs" />
     <Compile Include="SitecoreItemServiceClient.cs" />
   </ItemGroup>
   <ItemGroup>

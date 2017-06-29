@@ -33,9 +33,7 @@ namespace Revida.Sitecore.Assurance.Configuration
             ParseRootNodeParameter(options.Root, parameters);
 
             ParseBaseUrlParameter(options.BaseUrl, parameters);
-
-            ParseOptionalServiceVersionParameter(options.Service, parameters);
-
+            
             return parameters;
         }
 
@@ -74,21 +72,5 @@ namespace Revida.Sitecore.Assurance.Configuration
             }
             throw new InvalidCommandLineArgumentsException("Base url is required");        
         }
-
-        private static void ParseOptionalServiceVersionParameter(string service, ConfigurationParameters parameters)
-        {
-            if (!String.IsNullOrEmpty(service))
-            {
-                if (service == "6")
-                {
-                    parameters.SiteCoreClient = SitecoreClientVersion.ItemWebApi;
-                }
-            }
-            else
-            {
-                parameters.SiteCoreClient = SitecoreClientVersion.SiteCoreServicesClient;
-            }
-        }
-
     }
 }

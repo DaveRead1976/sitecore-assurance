@@ -58,7 +58,6 @@
     <Compile Include="MoqExtensions.cs" />
     <Compile Include="PageHttpResponseCheckerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SitecoreClientFactoryTests.cs" />
     <Compile Include="SitecoreItemServiceClientTests.cs" />
   </ItemGroup>
   <ItemGroup>

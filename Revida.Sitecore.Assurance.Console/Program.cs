@@ -1,5 +1,4 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using Autofac;
 using RestSharp;
@@ -27,8 +26,7 @@ namespace Revida.Sitecore.Assurance.Console
                 ShowUsage();
                 return;
             }
-
-            System.Console.WriteLine("Sitecore Client Version: " + Config.SiteCoreClient);
+            
             System.Console.WriteLine("Root Node GUID: " + Config.RootNodeId);
 
             List<SitecoreItem> sitecoreItems = TraverseSitecoreContentTree();
@@ -60,8 +58,7 @@ namespace Revida.Sitecore.Assurance.Console
         private static List<SitecoreItem> TraverseSitecoreContentTree()
         {
             IRestClient restClient = Container.Resolve<IRestClient>();
-            SitecoreClientFactory factory = new SitecoreClientFactory(restClient, Config);
-            ISitecoreServiceClient sitecoreServiceClient = factory.GetServiceClient();
+            ISitecoreServiceClient sitecoreServiceClient =  new SitecoreItemServiceClient(restClient, Config);
 
             List<SitecoreItem> sitecoreUrls = sitecoreServiceClient.GetSitecoreCmsTreeUrls();
             return sitecoreUrls;

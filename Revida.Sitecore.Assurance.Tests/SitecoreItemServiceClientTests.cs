@@ -18,8 +18,7 @@ namespace Revida.Sitecore.Assurance.Tests
             var configurationParameters = new ConfigurationParameters
             {
                 BaseUrl = "http://baseurl.com",
-                RootNodeId = Guid.NewGuid(),
-                SiteCoreClient = SitecoreClientVersion.SiteCoreServicesClient
+                RootNodeId = Guid.NewGuid()                
             };
             var restClient = new Mock<IRestClient>();
 
@@ -44,8 +43,7 @@ namespace Revida.Sitecore.Assurance.Tests
             var configurationParameters = new ConfigurationParameters
             {
                 BaseUrl = "http://baseurl.com",
-                RootNodeId = Guid.NewGuid(),
-                SiteCoreClient = SitecoreClientVersion.SiteCoreServicesClient
+                RootNodeId = Guid.NewGuid()
             };
             var restClient = new Mock<IRestClient>();
 
@@ -82,8 +80,7 @@ namespace Revida.Sitecore.Assurance.Tests
             var configurationParameters = new ConfigurationParameters
             {
                 BaseUrl = "http://baseurl.com",
-                RootNodeId = Guid.NewGuid(),
-                SiteCoreClient = SitecoreClientVersion.SiteCoreServicesClient
+                RootNodeId = Guid.NewGuid()
             };
             var restClient = new Mock<IRestClient>();
 
@@ -129,8 +126,7 @@ namespace Revida.Sitecore.Assurance.Tests
             var configurationParameters = new ConfigurationParameters
             {
                 BaseUrl = "http://baseurl.com",
-                RootNodeId = Guid.NewGuid(),
-                SiteCoreClient = SitecoreClientVersion.SiteCoreServicesClient
+                RootNodeId = Guid.NewGuid()
             };
             var restClient = new Mock<IRestClient>();
 
@@ -226,8 +222,7 @@ namespace Revida.Sitecore.Assurance.Tests
             var configurationParameters = new ConfigurationParameters
             {
                 BaseUrl = "http://baseurl.com",
-                RootNodeId = Guid.NewGuid(),
-                SiteCoreClient = SitecoreClientVersion.SiteCoreServicesClient
+                RootNodeId = Guid.NewGuid()
             };
             var restClient = new Mock<IRestClient>();
 
