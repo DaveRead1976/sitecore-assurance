@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using Moq;
 using NUnit.Framework;
 using RestSharp;
@@ -8,9 +10,8 @@ using Revida.Sitecore.Services.Client;
 
 namespace Revida.Sitecore.Assurance.Tests
 {
-    using System.Net;
-
     [TestFixture]
+    [ExcludeFromCodeCoverage]
     public class SitecoreItemServiceClientTests
     {
         [Test]
@@ -22,10 +23,24 @@ namespace Revida.Sitecore.Assurance.Tests
                 BaseUrl = "http://baseurl.com",
                 RootNodeId = Guid.NewGuid()                
             };
+
+            var rootNode = new SitecoreItem
+            {
+                DisplayName = "display name",
+                HasChildren = false,
+                ItemID = Guid.NewGuid(),
+                ItemPath = "/path/to/item",
+                ItemUrl = "/item/root"
+            };
+
             var restClient = new Mock<IRestClient>();
+
+            var rootResponse = new RestResponse<SitecoreItem> { Data = rootNode, StatusCode = HttpStatusCode.OK };
 
             var response = new RestResponse<List<SitecoreItem>> { Data = new List<SitecoreItem>(), StatusCode = HttpStatusCode.OK };
 
+            restClient.Setup(x => x.Execute<SitecoreItem>(It.IsAny<IRestRequest>())).Returns(rootResponse);
+
             restClient.Setup(x => x.Execute<List<SitecoreItem>>(It.IsAny<IRestRequest>())).Returns(response);
 
             var serviceClient = new SitecoreItemServiceClient(restClient.Object, configurationParameters);
@@ -35,11 +50,11 @@ namespace Revida.Sitecore.Assurance.Tests
 
             // Assert
             Assert.IsNotNull(urlList);
-            Assert.IsEmpty(urlList);
+            Assert.AreEqual(1, urlList.Count);    // include root node but no children
         }
 
         [Test]
-        public void Service_client_handles_null_response()
+        public void Service_client_handles_null_response_for_root_node()
         {
             // Arrange
             var configurationParameters = new ConfigurationParameters
@@ -47,46 +62,49 @@ namespace Revida.Sitecore.Assurance.Tests
                 BaseUrl = "http://baseurl.com",
                 RootNodeId = Guid.NewGuid()
             };
+            
             var restClient = new Mock<IRestClient>();
+
+            var rootResponse = new RestResponse<SitecoreItem> { Data = null, StatusCode = HttpStatusCode.OK };
+            
+            restClient.Setup(x => x.Execute<SitecoreItem>(It.IsAny<IRestRequest>())).Returns(rootResponse);
+            
+            var serviceClient = new SitecoreItemServiceClient(restClient.Object, configurationParameters);
+
+            // Act
+            var urlList = serviceClient.GetSitecoreCmsTreeUrls();
+
+            // Assert
+            Assert.IsNotNull(urlList);
+            Assert.AreEqual(0, urlList.Count);
+        }
+
+        [Test]
+        public void Service_client_handles_null_response_for_children()
+        {
+            // Arrange
+            var configurationParameters = new ConfigurationParameters
+            {
+                BaseUrl = "http://baseurl.com",
+                RootNodeId = Guid.NewGuid()
+            };
+
+            var rootNode = new SitecoreItem
+            {
+                DisplayName = "display name",
+                HasChildren = false,
+                ItemID = Guid.NewGuid(),
+                ItemPath = "/path/to/item",
+                ItemUrl = "/item/root"
+            };
+
+            var restClient = new Mock<IRestClient>();
+
+            var rootResponse = new RestResponse<SitecoreItem> { Data = rootNode, StatusCode = HttpStatusCode.OK };
 
             var response = new RestResponse<List<SitecoreItem>> { Data = null, StatusCode = HttpStatusCode.OK };
 
-            restClient.Setup(x => x.Execute<List<SitecoreItem>>(It.IsAny<IRestRequest>())).Returns(response);
-
-            var serviceClient = new SitecoreItemServiceClient(restClient.Object, configurationParameters);
-
-            // Act
-            var urlList = serviceClient.GetSitecoreCmsTreeUrls();
-
-            // Assert
-            Assert.IsNotNull(urlList);
-            Assert.IsEmpty(urlList);
-        }
-
-        [Test]
-        public void Service_client_handles_single_child_node()
-        {
-            // Arrange
-            var configurationParameters = new ConfigurationParameters
-            {
-                BaseUrl = "http://baseurl.com",
-                RootNodeId = Guid.NewGuid()
-            };
-            var restClient = new Mock<IRestClient>();
-
-            var itemList = new List<SitecoreItem>
-            {
-                new SitecoreItem
-                {
-                    DisplayName = "display name",
-                    HasChildren = false,
-                    ItemID = Guid.NewGuid(),
-                    ItemPath = "/path/to/item",
-                    ItemUrl = "http://baseurl.com/item/url"
-                }
-            };
-
-            var response = new RestResponse<List<SitecoreItem>> { Data = itemList, StatusCode = HttpStatusCode.OK };
+            restClient.Setup(x => x.Execute<SitecoreItem>(It.IsAny<IRestRequest>())).Returns(rootResponse);
 
             restClient.Setup(x => x.Execute<List<SitecoreItem>>(It.IsAny<IRestRequest>())).Returns(response);
 
@@ -101,6 +119,57 @@ namespace Revida.Sitecore.Assurance.Tests
         }
 
         [Test]
+        public void Service_client_handles_single_child_node()
+        {
+            // Arrange
+            var configurationParameters = new ConfigurationParameters
+            {
+                BaseUrl = "http://baseurl.com",
+                RootNodeId = Guid.NewGuid()
+            };
+
+            var restClient = new Mock<IRestClient>();
+
+            var rootNode = new SitecoreItem
+            {
+                DisplayName = "display name",
+                HasChildren = false,
+                ItemID = Guid.NewGuid(),
+                ItemPath = "/path/to/item",
+                ItemUrl = "/item/root"
+            };
+
+            var itemList = new List<SitecoreItem>
+            {
+                new SitecoreItem
+                {
+                    DisplayName = "display name",
+                    HasChildren = false,
+                    ItemID = Guid.NewGuid(),
+                    ItemPath = "/path/to/item",
+                    ItemUrl = "http://baseurl.com/item/url"
+                }
+            };
+
+            var rootResponse = new RestResponse<SitecoreItem> { Data = rootNode, StatusCode = HttpStatusCode.OK };
+
+            var response = new RestResponse<List<SitecoreItem>> { Data = itemList, StatusCode = HttpStatusCode.OK };
+
+            restClient.Setup(x => x.Execute<SitecoreItem>(It.IsAny<IRestRequest>())).Returns(rootResponse);
+
+            restClient.Setup(x => x.Execute<List<SitecoreItem>>(It.IsAny<IRestRequest>())).Returns(response);
+
+            var serviceClient = new SitecoreItemServiceClient(restClient.Object, configurationParameters);
+
+            // Act
+            var urlList = serviceClient.GetSitecoreCmsTreeUrls();
+
+            // Assert
+            Assert.IsNotNull(urlList);
+            Assert.AreEqual(2, urlList.Count);
+        }
+
+        [Test]
         public void Service_client_handles_multiple_child_nodes_with_no_children()
         {
             // Arrange
@@ -110,6 +179,15 @@ namespace Revida.Sitecore.Assurance.Tests
                 RootNodeId = Guid.NewGuid()
             };
             var restClient = new Mock<IRestClient>();
+
+            var rootNode = new SitecoreItem
+            {
+                DisplayName = "display name",
+                HasChildren = false,
+                ItemID = Guid.NewGuid(),
+                ItemPath = "/path/to/item",
+                ItemUrl = "/item/root"
+            };
 
             var itemList = new List<SitecoreItem>
             {
@@ -131,7 +209,11 @@ namespace Revida.Sitecore.Assurance.Tests
                 }
             };
 
+            var rootResponse = new RestResponse<SitecoreItem> { Data = rootNode, StatusCode = HttpStatusCode.OK };
+
             var response = new RestResponse<List<SitecoreItem>> { Data = itemList, StatusCode = HttpStatusCode.OK };
+
+            restClient.Setup(x => x.Execute<SitecoreItem>(It.IsAny<IRestRequest>())).Returns(rootResponse);
 
             restClient.Setup(x => x.Execute<List<SitecoreItem>>(It.IsAny<IRestRequest>())).Returns(response);
 
@@ -142,7 +224,7 @@ namespace Revida.Sitecore.Assurance.Tests
 
             // Assert
             Assert.IsNotNull(urlList);
-            Assert.AreEqual(2, urlList.Count);
+            Assert.AreEqual(3, urlList.Count);
         }
 
 
@@ -156,6 +238,17 @@ namespace Revida.Sitecore.Assurance.Tests
                 RootNodeId = Guid.NewGuid()
             };
             var restClient = new Mock<IRestClient>();
+
+            var topLevelItem = new SitecoreItem
+            {
+                DisplayName = "root node",
+                HasChildren = true,
+                ItemID = Guid.NewGuid(),
+                ItemPath = "/path/to/item",
+                ItemUrl = "/item/home"
+            };
+
+            var topLevelResponse = new RestResponse<SitecoreItem> { Data = topLevelItem, StatusCode = HttpStatusCode.OK };
 
             var topLevelItemList = new List<SitecoreItem>
             {
@@ -176,8 +269,7 @@ namespace Revida.Sitecore.Assurance.Tests
                     ItemUrl = "/item/url2"
                 }
             };
-
-            var topLevelResponse = new RestResponse<List<SitecoreItem>> { Data = topLevelItemList, StatusCode = HttpStatusCode.OK };
+            var topLevelChildrenResponse = new RestResponse<List<SitecoreItem>> {  Data = topLevelItemList, StatusCode = HttpStatusCode.OK };
 
             var firstChildItemList = new List<SitecoreItem>
             {
@@ -199,7 +291,7 @@ namespace Revida.Sitecore.Assurance.Tests
                 }
             };
 
-            var firstChildResponse = new RestResponse<List<SitecoreItem>> { Data = firstChildItemList, StatusCode = HttpStatusCode.OK };
+            var firstSubChildResponse = new RestResponse<List<SitecoreItem>> { Data = firstChildItemList, StatusCode = HttpStatusCode.OK };
 
             var secondChildItemList = new List<SitecoreItem>
             {
@@ -221,10 +313,12 @@ namespace Revida.Sitecore.Assurance.Tests
                 }
             };
 
-            var secondChildResponse = new RestResponse<List<SitecoreItem>> { Data = secondChildItemList, StatusCode = HttpStatusCode.OK };
+            var secondSubChildResponse = new RestResponse<List<SitecoreItem>> { Data = secondChildItemList, StatusCode = HttpStatusCode.OK };
+
+            restClient.Setup(x => x.Execute<SitecoreItem>(It.IsAny<IRestRequest>())).Returns(topLevelResponse);
 
             restClient.Setup(x => x.Execute<List<SitecoreItem>>(It.IsAny<IRestRequest>()))
-                                        .ReturnsInOrder(topLevelResponse, firstChildResponse, secondChildResponse);
+                                        .ReturnsInOrder(topLevelChildrenResponse, firstSubChildResponse, secondSubChildResponse);
 
             var serviceClient = new SitecoreItemServiceClient(restClient.Object, configurationParameters);
 
@@ -233,13 +327,14 @@ namespace Revida.Sitecore.Assurance.Tests
 
             // Assert
             Assert.IsNotNull(urlList);
-            Assert.AreEqual(6, urlList.Length);
-            Assert.AreEqual("/item/url", urlList[0].ItemUrl);
-            Assert.AreEqual("/item/url/child1", urlList[1].ItemUrl);
-            Assert.AreEqual("/item/url/child2", urlList[2].ItemUrl);
-            Assert.AreEqual("/item/url2", urlList[3].ItemUrl);
-            Assert.AreEqual("/item/url2/child3", urlList[4].ItemUrl);
-            Assert.AreEqual("/item/url2/child4", urlList[5].ItemUrl);
+            Assert.AreEqual(7, urlList.Length);
+            Assert.AreEqual("/item/home", urlList[0].ItemUrl);
+            Assert.AreEqual("/item/url", urlList[1].ItemUrl);
+            Assert.AreEqual("/item/url/child1", urlList[2].ItemUrl);
+            Assert.AreEqual("/item/url/child2", urlList[3].ItemUrl);
+            Assert.AreEqual("/item/url2", urlList[4].ItemUrl);
+            Assert.AreEqual("/item/url2/child3", urlList[5].ItemUrl);
+            Assert.AreEqual("/item/url2/child4", urlList[6].ItemUrl);
         }
 
         [Test]
@@ -251,7 +346,19 @@ namespace Revida.Sitecore.Assurance.Tests
                 BaseUrl = "http://baseurl.com",
                 RootNodeId = Guid.NewGuid()
             };
+
             var restClient = new Mock<IRestClient>();
+
+            var rootItem = new SitecoreItem
+            {
+                DisplayName = "display name",
+                HasChildren = true,
+                ItemID = Guid.NewGuid(),
+                ItemPath = "/path/to/item",
+                ItemUrl = "/item/root"
+            };
+
+            var rootResponse = new RestResponse<SitecoreItem> {Data = rootItem, StatusCode = HttpStatusCode.OK};
 
             var topLevelItemList = new List<SitecoreItem>
             {
@@ -363,6 +470,8 @@ namespace Revida.Sitecore.Assurance.Tests
 
             var child3ChildrenResponse = new RestResponse<List<SitecoreItem>> { Data = child3ChildrenItemList, StatusCode = HttpStatusCode.OK };
 
+            restClient.Setup(x => x.Execute<SitecoreItem>(It.IsAny<IRestRequest>())).Returns(rootResponse);
+
             restClient.Setup(x => x.Execute<List<SitecoreItem>>(It.IsAny<IRestRequest>()))
             .ReturnsInOrder(topLevelResponse, firstChildResponse, child2ChildrenResponse, secondChildResponse, child3ChildrenResponse);
 
@@ -373,17 +482,18 @@ namespace Revida.Sitecore.Assurance.Tests
 
             // Assert
             Assert.IsNotNull(urlList);
-            Assert.AreEqual(10, urlList.Length);
-            Assert.AreEqual("/item/url", urlList[0].ItemUrl);
-            Assert.AreEqual("/item/url/child1", urlList[1].ItemUrl);
-            Assert.AreEqual("/item/url/child2", urlList[2].ItemUrl);
-            Assert.AreEqual("/item/url/child2/subchild1", urlList[3].ItemUrl);
-            Assert.AreEqual("/item/url/child2/subchild2", urlList[4].ItemUrl);                        
-            Assert.AreEqual("/item/url2", urlList[5].ItemUrl);
-            Assert.AreEqual("/item/url2/child3", urlList[6].ItemUrl);
-            Assert.AreEqual("/item/url/child3/subchild1", urlList[7].ItemUrl);
-            Assert.AreEqual("/item/url/child3/subchild2", urlList[8].ItemUrl);
-            Assert.AreEqual("/item/url2/child4", urlList[9].ItemUrl);
+            Assert.AreEqual(11, urlList.Length);
+            Assert.AreEqual("/item/root", urlList[0].ItemUrl);
+            Assert.AreEqual("/item/url", urlList[1].ItemUrl);
+            Assert.AreEqual("/item/url/child1", urlList[2].ItemUrl);
+            Assert.AreEqual("/item/url/child2", urlList[3].ItemUrl);
+            Assert.AreEqual("/item/url/child2/subchild1", urlList[4].ItemUrl);
+            Assert.AreEqual("/item/url/child2/subchild2", urlList[5].ItemUrl);                        
+            Assert.AreEqual("/item/url2", urlList[6].ItemUrl);
+            Assert.AreEqual("/item/url2/child3", urlList[7].ItemUrl);
+            Assert.AreEqual("/item/url/child3/subchild1", urlList[8].ItemUrl);
+            Assert.AreEqual("/item/url/child3/subchild2", urlList[9].ItemUrl);
+            Assert.AreEqual("/item/url2/child4", urlList[10].ItemUrl);
         }
 
         [Test]        
@@ -395,11 +505,12 @@ namespace Revida.Sitecore.Assurance.Tests
                 BaseUrl = "http://baseurl.com",
                 RootNodeId = Guid.NewGuid()
             };
+
             var restClient = new Mock<IRestClient>();
 
-            var response = new RestResponse<List<SitecoreItem>> { Data = new List<SitecoreItem>(), StatusCode = HttpStatusCode.Forbidden };
+            var response = new RestResponse<SitecoreItem> { Data = null, StatusCode = HttpStatusCode.Forbidden };
 
-            restClient.Setup(x => x.Execute<List<SitecoreItem>>(It.IsAny<IRestRequest>())).Returns(response);
+            restClient.Setup(x => x.Execute<SitecoreItem>(It.IsAny<IRestRequest>())).Returns(response);
 
             var serviceClient = new SitecoreItemServiceClient(restClient.Object, configurationParameters);
             

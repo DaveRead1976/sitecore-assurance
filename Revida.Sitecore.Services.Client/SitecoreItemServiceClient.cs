@@ -6,10 +6,12 @@ using Revida.Sitecore.Assurance.Configuration;
 namespace Revida.Sitecore.Services.Client
 {
     using System.Net;
-
+    
     public class SitecoreItemServiceClient : ISitecoreServiceClient
     {
-        private const string ItemUrlFormatString = "http://{0}/sitecore/api/ssc/item/{1}/children";
+        private const string RootItemUrlFormatString = "http://{0}/sitecore/api/ssc/item/{1}";
+
+        private const string ItemChildrenUrlFormatString = "http://{0}/sitecore/api/ssc/item/{1}/children";
 
         private ConfigurationParameters ConfigurationParameters { get; }
 
@@ -27,24 +29,20 @@ namespace Revida.Sitecore.Services.Client
             List<SitecoreItem> sitecoreUrls = new List<SitecoreItem>();
 
             Guid rootNodeId = ConfigurationParameters.RootNodeId;
+            
+            var response = ExecuteRestRequest<SitecoreItem>(baseUri, rootNodeId, RootItemUrlFormatString);
+            if (response.StatusCode == HttpStatusCode.OK && response.Data != null)
+            {
+                sitecoreUrls.Add(response.Data);
+                sitecoreUrls = ParseUrlTree(baseUri, rootNodeId, sitecoreUrls);
+            }            
 
-            return ParseUrlTree(baseUri, rootNodeId, sitecoreUrls); 
+            return sitecoreUrls;            
         }
 
         private List<SitecoreItem> ParseUrlTree(Uri baseUri, Guid rootNodeId, List<SitecoreItem> sitecoreUrls)
         {
-            Uri serviceEndpointUrl = new Uri(string.Format(ItemUrlFormatString, baseUri.Host, rootNodeId));
-
-            ServiceClient.BaseUrl = baseUri;
-            IRestRequest request = new RestRequest(serviceEndpointUrl.PathAndQuery);
-            request.Method = Method.GET;
-            
-            IRestResponse<List<SitecoreItem>> response = ServiceClient.Execute<List<SitecoreItem>>(request);
-
-            if (response.StatusCode == HttpStatusCode.Forbidden)
-            {
-                throw new ServiceClientAuthorizationException("Access denied when connecting to Sitecore Service Client");
-            }
+            var response = ExecuteRestRequest<List<SitecoreItem>>(baseUri, rootNodeId, ItemChildrenUrlFormatString);
 
             if (response.StatusCode == HttpStatusCode.OK && response.Data != null)
             {
@@ -60,6 +58,24 @@ namespace Revida.Sitecore.Services.Client
                 }
             }
             return sitecoreUrls;
+        }
+
+        private IRestResponse<T> ExecuteRestRequest<T>(Uri baseUri, Guid rootNodeId, string formatString) where T : new()
+        {
+            Uri serviceEndpointUrl = new Uri(string.Format(formatString, baseUri.Host, rootNodeId));
+
+            ServiceClient.BaseUrl = baseUri;
+            IRestRequest request = new RestRequest(serviceEndpointUrl.PathAndQuery);
+            request.Method = Method.GET;
+
+            IRestResponse<T> response = ServiceClient.Execute<T>(request);
+
+            if (response.StatusCode == HttpStatusCode.Forbidden)
+            {
+                throw new ServiceClientAuthorizationException("Access denied when connecting to Sitecore Service Client");
+            }
+
+            return response;
         }
     }
 }

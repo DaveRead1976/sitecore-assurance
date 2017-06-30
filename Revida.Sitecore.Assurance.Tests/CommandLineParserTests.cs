@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework;
 using Revida.Sitecore.Assurance.Configuration;
 
 namespace Revida.Sitecore.Assurance.Tests
 {
     [TestFixture]
+    [ExcludeFromCodeCoverage]
     public class CommandLineParserTests
     {
         [Test]

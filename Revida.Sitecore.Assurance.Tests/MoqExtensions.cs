@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Moq.Language.Flow;
 
 namespace Revida.Sitecore.Assurance.Tests
 {
+    
+    [ExcludeFromCodeCoverage]
     public static class MoqExtensions
     {
         public static void ReturnsInOrder<T, TResult>(this ISetup<T, TResult> setup,
