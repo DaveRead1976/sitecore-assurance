@@ -83,9 +83,8 @@ namespace Revida.Sitecore.Assurance.Console
 
         private static void ShowUsage()
         {
-            System.Console.WriteLine("Usage: sitecore-assurance -r {root node guid} -u {base url} [-s {service version}]");
-            System.Console.WriteLine(
-                "       sitecore-assurance --root {root node guid} -baseurl {base url} [--service {service version}]");
+            System.Console.WriteLine("Usage: sitecore-assurance -r {root node guid} -u {base url}");
+            System.Console.WriteLine("       sitecore-assurance --root {root node guid} --baseurl {base url}");
         }
 
     }
