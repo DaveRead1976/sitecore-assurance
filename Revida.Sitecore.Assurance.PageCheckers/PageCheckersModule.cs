@@ -9,7 +9,7 @@ namespace Revida.Sitecore.Assurance.PageCheckers
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<HttpWebRequestFactory>().As<IHttpWebRequestFactory>();
-            builder.RegisterType<PageHttpResponseChecker>().AsSelf();
+            builder.RegisterType<HttpResponsePageChecker>().AsSelf();            
         }
     }
 }

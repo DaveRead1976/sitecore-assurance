@@ -9,5 +9,14 @@ namespace Revida.Sitecore.Assurance.Configuration
         
         [Option('u', "baseurl")]
         public string BaseUrl { get; set; }
+
+        [Option('l', "list")]
+        public bool ListUrls { get; set; }
+
+        [Option('h', "http")]
+        public bool RunHttpChecker { get; set; }
+
+        [Option('s', "selenium")]
+        public bool RunWebDriverChecker { get; set; }
     }
 }

@@ -33,28 +33,39 @@ namespace Revida.Sitecore.Assurance.Console
 
             System.Console.WriteLine(sitecoreItems.Count + " Sitecore URLs found in content tree" );
 
-            PerformChecksOnSitecoreItems(sitecoreItems);
+            if (Config.ListUrls)
+            {
+                ListSitecoreUrls(sitecoreItems);
+                return;
+            }
+
+            if (Config.RunHttpChecker)
+            {
+                var httpRunner = new HttpPageCheckerRunner(Container);
+                httpRunner.Run(Config, sitecoreItems);
+            }
+            if (Config.RunWebDriverChecker)
+            {
+                var webDriverRunner = new WebDriverPageCheckerRunner();
+                webDriverRunner.Run(Config, sitecoreItems);
+            }
+
+            Environment.Exit(0);
         }
 
-        private static void PerformChecksOnSitecoreItems(List<SitecoreItem> sitecoreItems)
+        private static void ListSitecoreUrls(List<SitecoreItem> sitecoreItems)
         {
             if (sitecoreItems.Count > 0)
             {
-                System.Console.WriteLine("Success?\tStatus Code\tItem path");
+                System.Console.WriteLine("Url\tItem path");
             }
-
-            PageHttpResponseChecker checker = Container.Resolve<PageHttpResponseChecker>();
 
             foreach (SitecoreItem sitecoreItem in sitecoreItems)
-            {
-                Uri pageUrl = new Uri($"{Config.BaseUrl}/{sitecoreItem.ItemUrl}");
-
-                PageCheckResult result = checker.PageResponseValid(pageUrl);
-
-                System.Console.WriteLine($"{result.Success}\t{result.StatusCode}\t{sitecoreItem.ItemPath}");
+            {                
+                System.Console.WriteLine($"{sitecoreItem.ItemUrl}\t{sitecoreItem.ItemPath}");
             }
         }
-
+        
         private static List<SitecoreItem> TraverseSitecoreContentTree()
         {
             IRestClient restClient = Container.Resolve<IRestClient>();
@@ -83,8 +94,8 @@ namespace Revida.Sitecore.Assurance.Console
 
         private static void ShowUsage()
         {
-            System.Console.WriteLine("Usage: sitecore-assurance -r {root node guid} -u {base url}");
-            System.Console.WriteLine("       sitecore-assurance --root {root node guid} --baseurl {base url}");
+            System.Console.WriteLine("Usage: sitecore-assurance -r {root node guid} -u {base url} [-l] [-h] [-s] ");
+            System.Console.WriteLine("       sitecore-assurance --root {root node guid} --baseurl {base url} [--list] [--http] [--selenium]");
         }
 
     }

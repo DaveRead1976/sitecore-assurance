@@ -33,6 +33,10 @@ namespace Revida.Sitecore.Assurance.Configuration
             ParseRootNodeParameter(options.Root, parameters);
 
             ParseBaseUrlParameter(options.BaseUrl, parameters);
+
+            parameters.ListUrls = options.ListUrls;
+            parameters.RunHttpChecker = options.RunHttpChecker;
+            parameters.RunWebDriverChecker = options.RunWebDriverChecker;
             
             return parameters;
         }
