@@ -16,7 +16,7 @@ namespace Revida.Sitecore.Assurance.Tests
             var args = new string[0];
             
             // Act / Assert
-            Assert.Throws<InvalidCommandLineArgumentsException>(
+            Assert.Throws<InvalidConfigurationException>(
                 () => ConfigurationParameterParser.ParseCommandLineArgs(args),
                 "No command line arguments supplied");
         }
@@ -28,7 +28,7 @@ namespace Revida.Sitecore.Assurance.Tests
             string[] args = null;
             
             // Act / Assert
-            Assert.Throws<InvalidCommandLineArgumentsException>(
+            Assert.Throws<InvalidConfigurationException>(
                 () => ConfigurationParameterParser.ParseCommandLineArgs(args),
                 "No command line arguments supplied");
         }
@@ -62,7 +62,7 @@ namespace Revida.Sitecore.Assurance.Tests
             args[1] = rootNodeGuid.ToString();            
 
             // Act / Assert
-            Assert.Throws<InvalidCommandLineArgumentsException>(
+            Assert.Throws<InvalidConfigurationException>(
                 () => ConfigurationParameterParser.ParseCommandLineArgs(args),
                 "Base url is required");
         }
@@ -77,7 +77,7 @@ namespace Revida.Sitecore.Assurance.Tests
             args[1] = rootNodeGuid.ToString();
 
             // Act / Assert
-            Assert.Throws<InvalidCommandLineArgumentsException>(
+            Assert.Throws<InvalidConfigurationException>(
                 () => ConfigurationParameterParser.ParseCommandLineArgs(args),
                 "Base url is required");
         }
@@ -94,7 +94,7 @@ namespace Revida.Sitecore.Assurance.Tests
             args[3] = "^7";
 
             // Act / Assert
-            Assert.Throws<InvalidCommandLineArgumentsException>(
+            Assert.Throws<InvalidConfigurationException>(
                 () => ConfigurationParameterParser.ParseCommandLineArgs(args),
                 "Base url is invalid");
         }
@@ -112,7 +112,7 @@ namespace Revida.Sitecore.Assurance.Tests
             args[5] = "http://www.baseurl.com";
 
             // Act / Assert
-            Assert.Throws<InvalidCommandLineArgumentsException>(
+            Assert.Throws<InvalidConfigurationException>(
                 () => ConfigurationParameterParser.ParseCommandLineArgs(args),
                 "Root node id is invalid");
         }

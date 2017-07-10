@@ -19,16 +19,32 @@ namespace Revida.Sitecore.Assurance.Console
         public static void Main(string[] args)
         {
             RegisterIocModules();
+            
             try
             {
-                Config = ConfigurationParameterParser.ParseCommandLineArgs(args);
+                if (ConfigurationFileHelper.ConfigurationFileExists())
+                {
+                    try
+                    {
+                        Config = ConfigurationParameterParser.LoadConfigurationFile();
+                    }
+                    catch (InvalidConfigurationException)
+                    {
+                        // fall back to command line options if cannot load from .config
+                        Config = ConfigurationParameterParser.ParseCommandLineArgs(args);
+                    }
+                }
+                else
+                {
+                    Config = ConfigurationParameterParser.ParseCommandLineArgs(args);                
+                }
             }
-            catch (InvalidCommandLineArgumentsException)
+            catch (InvalidConfigurationException)
             {
                 ShowUsage();
                 return;
             }
-            
+
             System.Console.WriteLine("Root Node GUID: " + Config.RootNodeId);
 
             List<SitecoreItem> sitecoreItems = TraverseSitecoreContentTree();
