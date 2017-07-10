@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Autofac;
-using Revida.Sitecore.Services.Client;
+using Revida.Sitecore.Assurance.Configuration;
+using Revida.Sitecore.Assurance.Model;
 using Revida.Sitecore.Assurance.PageCheckers;
 
 namespace Revida.Sitecore.Assurance.Console
 {
-    using Configuration;
-
     public class HttpPageCheckerRunner
     {
         private IContainer Container { get; }
@@ -27,10 +25,8 @@ namespace Revida.Sitecore.Assurance.Console
             HttpResponsePageChecker checker = Container.Resolve<HttpResponsePageChecker>();
 
             foreach (SitecoreItem sitecoreItem in sitecoreItems)
-            {
-                Uri pageUrl = new Uri($"{config.BaseUrl}/{sitecoreItem.ItemUrl}");
-
-                HttpPageCheckResult result = checker.PageResponseValid(pageUrl) as HttpPageCheckResult;
+            {                
+                HttpPageCheckResult result = checker.PageResponseValid(config.BaseUrl, sitecoreItem) as HttpPageCheckResult;
 
                 System.Console.WriteLine($"{result?.Success}\t{result?.StatusCode}\t{sitecoreItem.ItemPath}");
             }

@@ -3,7 +3,9 @@ using System.Net;
 
 namespace Revida.Sitecore.Assurance.PageCheckers
 {
-    public class HttpResponsePageChecker : IPageChecker
+    using Model;
+
+    public class HttpResponsePageChecker : BasePageChecker, IPageChecker
     {
         private IHttpWebRequestFactory RequestFactory { get; }
 
@@ -12,10 +14,11 @@ namespace Revida.Sitecore.Assurance.PageCheckers
             RequestFactory = requestFactory;
         }
 
-        public PageCheckResult PageResponseValid(Uri pageUrl)
+        public PageCheckResult PageResponseValid(string baseUrl, SitecoreItem sitecoreItem)
         {
             try
             {
+                Uri pageUrl = GeneratePageUrl(baseUrl, sitecoreItem);
                 var httpWebRequest = RequestFactory.Create(pageUrl.AbsoluteUri);
                 httpWebRequest.AllowAutoRedirect = false;
                 var response = (HttpWebResponse) httpWebRequest.GetResponse();

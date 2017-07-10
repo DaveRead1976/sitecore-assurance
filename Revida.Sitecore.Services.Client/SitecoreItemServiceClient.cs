@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using RestSharp;
 using Revida.Sitecore.Assurance.Configuration;
+using Revida.Sitecore.Assurance.Model;
 
 namespace Revida.Sitecore.Services.Client
 {

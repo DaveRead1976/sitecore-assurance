@@ -52,7 +52,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceClientAuthorizationException.cs" />
     <Compile Include="ServicesClientModule.cs" />
-    <Compile Include="SitecoreItem.cs" />
     <Compile Include="SitecoreItemServiceClient.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -62,6 +61,10 @@
     <ProjectReference Include="..\Revida.Sitecore.Assurance.Configuration\Revida.Sitecore.Assurance.Configuration.csproj">
       <Project>{d845c3aa-17a4-43a1-9edf-3798ca860787}</Project>
       <Name>Revida.Sitecore.Assurance.Configuration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Revida.Sitecore.Assurance.Model\Revida.Sitecore.Assurance.Model.csproj">
+      <Project>{fdf835a1-4fa8-4940-a49c-b9939d9a52d1}</Project>
+      <Name>Revida.Sitecore.Assurance.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

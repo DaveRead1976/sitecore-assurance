@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using Autofac;
 using RestSharp;
 using Revida.Sitecore.Assurance.Configuration;
+using Revida.Sitecore.Assurance.Model;
 using Revida.Sitecore.Assurance.PageCheckers;
 using Revida.Sitecore.Services.Client;
 
 namespace Revida.Sitecore.Assurance.Console
 {
+
     public class Program
     {
         private static IContainer Container { get; set; }

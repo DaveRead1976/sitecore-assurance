@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Revida.Sitecore.Services.Client
+namespace Revida.Sitecore.Assurance.Model
 {
     public class SitecoreItem
     {

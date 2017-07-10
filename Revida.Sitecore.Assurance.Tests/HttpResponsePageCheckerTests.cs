@@ -7,6 +7,8 @@ using Revida.Sitecore.Assurance.PageCheckers;
 
 namespace Revida.Sitecore.Assurance.Tests
 {
+    using Model;
+
     [TestFixture]
     [ExcludeFromCodeCoverage]
     public class HttpResponsePageCheckerTests
@@ -35,7 +37,7 @@ namespace Revida.Sitecore.Assurance.Tests
             var pageChecker = new HttpResponsePageChecker(factory.Object);
 
             // Act
-            var validationResult = pageChecker.PageResponseValid(new Uri("http://test.com")) as HttpPageCheckResult;
+            var validationResult = pageChecker.PageResponseValid("http://baseurl/", new SitecoreItem { ItemUrl = "/test"}) as HttpPageCheckResult;
 
             // Assert
             Assert.IsNotNull(validationResult);
@@ -59,7 +61,7 @@ namespace Revida.Sitecore.Assurance.Tests
             var pageChecker = new HttpResponsePageChecker(factory.Object);
 
             // Act
-            var validationResult = pageChecker.PageResponseValid(new Uri("http://test.com")) as HttpPageCheckResult;
+            var validationResult = pageChecker.PageResponseValid("http://baseurl/", new SitecoreItem { ItemUrl = "/test" }) as HttpPageCheckResult;
 
             // Assert
             Assert.IsNotNull(validationResult);
@@ -87,7 +89,7 @@ namespace Revida.Sitecore.Assurance.Tests
             var pageChecker = new HttpResponsePageChecker(factory.Object);
 
             // Act
-            var validationResult = pageChecker.PageResponseValid(new Uri("http://test.com")) as HttpPageCheckResult;
+            var validationResult = pageChecker.PageResponseValid("http://baseurl/", new SitecoreItem { ItemUrl = "/test" }) as HttpPageCheckResult;
 
             // Assert
             Assert.IsNotNull(validationResult);

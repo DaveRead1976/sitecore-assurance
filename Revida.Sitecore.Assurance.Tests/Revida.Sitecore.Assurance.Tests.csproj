@@ -63,16 +63,26 @@
     <Compile Include="MoqExtensions.cs" />
     <Compile Include="HttpResponsePageCheckerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="SitecoreItemServiceClientTests.cs" />
     <Compile Include="WebDriverPageCheckerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\Blank.png.data" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Revida.Sitecore.Assurance.Configuration\Revida.Sitecore.Assurance.Configuration.csproj">
       <Project>{d845c3aa-17a4-43a1-9edf-3798ca860787}</Project>
       <Name>Revida.Sitecore.Assurance.Configuration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Revida.Sitecore.Assurance.Model\Revida.Sitecore.Assurance.Model.csproj">
+      <Project>{fdf835a1-4fa8-4940-a49c-b9939d9a52d1}</Project>
+      <Name>Revida.Sitecore.Assurance.Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\Revida.Sitecore.Assurance.PageCheckers\Revida.Sitecore.Assurance.PageCheckers.csproj">
       <Project>{16089382-5754-43bd-b2d7-071b8470df68}</Project>
@@ -85,6 +95,15 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Blank.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

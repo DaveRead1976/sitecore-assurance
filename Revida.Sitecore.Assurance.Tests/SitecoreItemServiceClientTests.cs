@@ -10,6 +10,8 @@ using Revida.Sitecore.Services.Client;
 
 namespace Revida.Sitecore.Assurance.Tests
 {
+    using Model;
+
     [TestFixture]
     [ExcludeFromCodeCoverage]
     public class SitecoreItemServiceClientTests

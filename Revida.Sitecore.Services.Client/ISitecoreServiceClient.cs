@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Revida.Sitecore.Assurance.Model;
 
 namespace Revida.Sitecore.Services.Client
 {
