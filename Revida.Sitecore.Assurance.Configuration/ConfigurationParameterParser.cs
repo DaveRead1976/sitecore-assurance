@@ -46,7 +46,10 @@ namespace Revida.Sitecore.Assurance.Configuration
                     ListUrls = Convert.ToBoolean(configurationSettings["ListUrls"]),
                     RootNodeId = new Guid(configurationSettings["RootNodeId"]),
                     RunHttpChecker = Convert.ToBoolean(configurationSettings["RunHttpChecker"]),
-                    RunWebDriverChecker = Convert.ToBoolean(configurationSettings["RunWebDriverChecker"])
+                    RunWebDriverChecker = Convert.ToBoolean(configurationSettings["RunWebDriverChecker"]),
+                    Domain = configurationSettings["Domain"],
+                    UserName = configurationSettings["UserName"],
+                    Password = configurationSettings["Password"]
                 };
                 return configurationParameters;
             }
@@ -67,6 +70,9 @@ namespace Revida.Sitecore.Assurance.Configuration
             parameters.ListUrls = options.ListUrls;
             parameters.RunHttpChecker = options.RunHttpChecker;
             parameters.RunWebDriverChecker = options.RunWebDriverChecker;
+            parameters.Domain = options.Domain;
+            parameters.UserName = options.Username;
+            parameters.Password = options.Password;
             
             return parameters;
         }

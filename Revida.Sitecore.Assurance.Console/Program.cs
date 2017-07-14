@@ -9,6 +9,7 @@ using Revida.Sitecore.Services.Client;
 
 namespace Revida.Sitecore.Assurance.Console
 {
+    using System.Net;
 
     public class Program
     {
@@ -45,11 +46,11 @@ namespace Revida.Sitecore.Assurance.Console
                 return;
             }
 
-            System.Console.WriteLine("Root Node GUID: " + Config.RootNodeId);
+            System.Console.WriteLine($"Root Node GUID: {Config.RootNodeId}");
 
             List<SitecoreItem> sitecoreItems = TraverseSitecoreContentTree();
 
-            System.Console.WriteLine(sitecoreItems.Count + " Sitecore URLs found in content tree" );
+            System.Console.WriteLine($"{sitecoreItems.Count} Sitecore URLs found in content tree" );
 
             if (Config.ListUrls)
             {
@@ -87,6 +88,7 @@ namespace Revida.Sitecore.Assurance.Console
         private static List<SitecoreItem> TraverseSitecoreContentTree()
         {
             IRestClient restClient = Container.Resolve<IRestClient>();
+            restClient.CookieContainer = new CookieContainer();
             ISitecoreServiceClient sitecoreServiceClient =  new SitecoreItemServiceClient(restClient, Config);
 
             try
@@ -96,7 +98,7 @@ namespace Revida.Sitecore.Assurance.Console
             }
             catch (ServiceClientAuthorizationException)
             {
-                System.Console.WriteLine("Unable to connect to Sitecore Services Client with the supplied credentials");
+                System.Console.WriteLine("Unable to connect to Sitecore Services Client with the supplied credentials or anonymous access is not enabled");
                 Environment.Exit(1);
             }
             return null;
@@ -112,8 +114,8 @@ namespace Revida.Sitecore.Assurance.Console
 
         private static void ShowUsage()
         {
-            System.Console.WriteLine("Usage: sitecore-assurance -r {root node guid} -u {base url} [-l] [-h] [-s] ");
-            System.Console.WriteLine("       sitecore-assurance --root {root node guid} --baseurl {base url} [--list] [--http] [--selenium]");
+            System.Console.WriteLine("Usage: sitecore-assurance -r {root node guid} -b {base url} [-u {user name}] [-p {password}] [-d {domain}] [-l] [-h] [-s] ");
+            System.Console.WriteLine("       sitecore-assurance --root {root node guid} --baseurl {base url} [--username {user name}] [--password {password}] [--domain {domain}] [--list] [--http] [--selenium]");
         }
 
     }

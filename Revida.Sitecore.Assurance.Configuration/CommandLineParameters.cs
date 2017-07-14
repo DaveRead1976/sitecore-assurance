@@ -7,8 +7,17 @@ namespace Revida.Sitecore.Assurance.Configuration
         [Option('r', "root", Required = true)]
         public string Root { get; set; }
         
-        [Option('u', "baseurl")]
+        [Option('b', "baseurl")]
         public string BaseUrl { get; set; }
+
+        [Option('d', "domain")]
+        public string Domain { get; set; }
+
+        [Option('u', "username")]
+        public string Username { get; set; }
+
+        [Option('p', "password")]
+        public string Password { get; set; }
 
         [Option('l', "list")]
         public bool ListUrls { get; set; }

@@ -519,5 +519,56 @@ namespace Revida.Sitecore.Assurance.Tests
             // Act / Assert
             Assert.Throws<ServiceClientAuthorizationException>(() => serviceClient.GetSitecoreCmsTreeUrls());
         }
+
+        [Test]
+        public void Service_client_handles_login_and_logout_if_credentials_specified()
+        {
+            // Arrange
+            var configurationParameters = new ConfigurationParameters
+            {
+                BaseUrl = "http://baseurl.com",
+                RootNodeId = Guid.NewGuid(),
+                Domain = "sitecore",
+                UserName = "username",
+                Password = "password"
+            };
+
+            var restClient = new Mock<IRestClient>();
+
+            var loginResponse = new RestResponse<LoginResult> { Data = new LoginResult(), StatusCode = HttpStatusCode.OK };
+
+            restClient.Setup(x => x.Execute<LoginResult>(It.IsAny<IRestRequest>())).Returns(loginResponse).Verifiable();
+
+            var rootNode = new SitecoreItem
+            {
+                DisplayName = "display name",
+                HasChildren = false,
+                ItemID = Guid.NewGuid(),
+                ItemPath = "/path/to/item",
+                ItemUrl = "/item/root"
+            };
+            
+            var rootResponse = new RestResponse<SitecoreItem> { Data = rootNode, StatusCode = HttpStatusCode.OK };
+
+            restClient.Setup(x => x.Execute<SitecoreItem>(It.IsAny<IRestRequest>())).Returns(rootResponse);
+
+            var response = new RestResponse<List<SitecoreItem>> { Data = new List<SitecoreItem>(), StatusCode = HttpStatusCode.OK };
+
+            restClient.Setup(x => x.Execute<List<SitecoreItem>>(It.IsAny<IRestRequest>())).Returns(response);
+            
+            var logoutResponse = new RestResponse<LogoutResult> { Data = new LogoutResult(), StatusCode = HttpStatusCode.OK };
+
+            restClient.Setup(x => x.Execute<LogoutResult>(It.IsAny<IRestRequest>())).Returns(logoutResponse).Verifiable();
+
+            var serviceClient = new SitecoreItemServiceClient(restClient.Object, configurationParameters);
+
+            // Act
+            var sitecoreItems = serviceClient.GetSitecoreCmsTreeUrls(); 
+            
+            // Assert
+            Assert.AreEqual(1, sitecoreItems.Count);   
+            Assert.IsFalse(sitecoreItems[0].HasChildren);
+            restClient.VerifyAll();
+        }
     }
 }

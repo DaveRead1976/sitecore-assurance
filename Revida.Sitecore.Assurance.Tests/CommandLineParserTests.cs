@@ -24,12 +24,9 @@ namespace Revida.Sitecore.Assurance.Tests
         [Test]
         public void Arguments_are_null()
         {
-            // Arrange
-            string[] args = null;
-            
             // Act / Assert
             Assert.Throws<InvalidConfigurationException>(
-                () => ConfigurationParameterParser.ParseCommandLineArgs(args),
+                () => ConfigurationParameterParser.ParseCommandLineArgs(null),
                 "No command line arguments supplied");
         }
         
@@ -41,7 +38,7 @@ namespace Revida.Sitecore.Assurance.Tests
             Guid rootNodeGuid = Guid.NewGuid();
             args[0] = "-r";
             args[1] = rootNodeGuid.ToString();
-            args[2] = "-u";
+            args[2] = "-b";
             args[3] = "http://www.baseurl.com";
             
             // Act
@@ -105,11 +102,9 @@ namespace Revida.Sitecore.Assurance.Tests
             // Arrange
             var args = new string[6];
             args[0] = "--root";
-            args[1] = "abv5";
-            args[2] = "--service";
-            args[3] = "6";
-            args[4] = "--baseurl";
-            args[5] = "http://www.baseurl.com";
+            args[1] = "abv5";            
+            args[2] = "--baseurl";
+            args[3] = "http://www.baseurl.com";
 
             // Act / Assert
             Assert.Throws<InvalidConfigurationException>(
