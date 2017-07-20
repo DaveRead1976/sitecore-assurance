@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandLineParameters.cs" />
+    <Compile Include="ConfigurationFileHelper.cs" />
     <Compile Include="ConfigurationParameterParser.cs" />
     <Compile Include="ConfigurationParameters.cs" />
     <Compile Include="InvalidConfigurationException.cs" />

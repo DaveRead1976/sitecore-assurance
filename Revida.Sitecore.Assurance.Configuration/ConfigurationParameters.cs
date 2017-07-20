@@ -20,7 +20,9 @@ namespace Revida.Sitecore.Assurance.Configuration
 
         public string Password { get; set; }
 
-        public bool HasCredentials => (!String.IsNullOrWhiteSpace(Domain)) && (!String.IsNullOrWhiteSpace(UserName)) &&
-                                      (!String.IsNullOrWhiteSpace(Password));
+        public string InputFileName { get; set; }
+
+        public bool HasCredentials => (!string.IsNullOrWhiteSpace(Domain)) && (!string.IsNullOrWhiteSpace(UserName)) &&
+                                      (!string.IsNullOrWhiteSpace(Password));
     }    
 }

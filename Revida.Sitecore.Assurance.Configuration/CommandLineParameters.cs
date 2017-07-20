@@ -27,5 +27,8 @@ namespace Revida.Sitecore.Assurance.Configuration
 
         [Option('s', "selenium")]
         public bool RunWebDriverChecker { get; set; }
+
+        [Option('i', "inputfile")]
+        public string InputFileName { get; set; }
     }
 }

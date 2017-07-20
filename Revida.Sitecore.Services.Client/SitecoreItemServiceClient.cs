@@ -25,14 +25,14 @@ namespace Revida.Sitecore.Services.Client
         {
             ServiceClient = serviceClient;
             ConfigurationParameters = configurationParameters;
-            // allow self-signed certificates to be trusted for ssl connection
+            // allow self-signed certificates to be trusted for ssl connection to Sitecore Services Client
             ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
         }
 
         public List<SitecoreItem> GetSitecoreCmsTreeUrls()
         {
             Uri baseUri = new Uri(ConfigurationParameters.BaseUrl);
-            List<SitecoreItem> sitecoreUrls = new List<SitecoreItem>();
+            var sitecoreUrls = new List<SitecoreItem>();
 
             if (ConfigurationParameters.HasCredentials)
             {
@@ -108,7 +108,7 @@ namespace Revida.Sitecore.Services.Client
 
         private IRestResponse<T> ExecuteRestRequest<T>(Uri baseUri, string formatString, Method requestMethod, string rootNodeId = null, Credentials credentials = null) where T : new()
         {
-            Uri serviceEndpointUrl = new Uri(string.Format(formatString, baseUri.Host, rootNodeId));
+            var serviceEndpointUrl = new Uri(string.Format(formatString, baseUri.Host, rootNodeId));
 
             ServiceClient.BaseUrl = baseUri;
             IRestRequest request = new RestRequest(serviceEndpointUrl.PathAndQuery);

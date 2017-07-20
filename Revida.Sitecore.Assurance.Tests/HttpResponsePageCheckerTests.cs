@@ -37,7 +37,7 @@ namespace Revida.Sitecore.Assurance.Tests
             var pageChecker = new HttpResponsePageChecker(factory.Object);
 
             // Act
-            var validationResult = pageChecker.PageResponseValid("http://baseurl/", new SitecoreItem { ItemUrl = "/test"}) as HttpPageCheckResult;
+            var validationResult = pageChecker.PageResponseValid("http://baseurl/", new SitecoreItem { ExternalUrl = "/test"}) as HttpPageCheckResult;
 
             // Assert
             Assert.IsNotNull(validationResult);
@@ -61,7 +61,7 @@ namespace Revida.Sitecore.Assurance.Tests
             var pageChecker = new HttpResponsePageChecker(factory.Object);
 
             // Act
-            var validationResult = pageChecker.PageResponseValid("http://baseurl/", new SitecoreItem { ItemUrl = "/test" }) as HttpPageCheckResult;
+            var validationResult = pageChecker.PageResponseValid("http://baseurl/", new SitecoreItem { ExternalUrl = "/test" }) as HttpPageCheckResult;
 
             // Assert
             Assert.IsNotNull(validationResult);
@@ -89,7 +89,7 @@ namespace Revida.Sitecore.Assurance.Tests
             var pageChecker = new HttpResponsePageChecker(factory.Object);
 
             // Act
-            var validationResult = pageChecker.PageResponseValid("http://baseurl/", new SitecoreItem { ItemUrl = "/test" }) as HttpPageCheckResult;
+            var validationResult = pageChecker.PageResponseValid("http://baseurl/", new SitecoreItem { ExternalUrl = "/test" }) as HttpPageCheckResult;
 
             // Assert
             Assert.IsNotNull(validationResult);

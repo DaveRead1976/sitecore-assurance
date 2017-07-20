@@ -14,6 +14,6 @@ namespace Revida.Sitecore.Assurance.Model
 
         public string DisplayName { get; set; }
 
-        public string ItemUrl { get; set; }
+        public string ExternalUrl { get; set; }
     }
 }

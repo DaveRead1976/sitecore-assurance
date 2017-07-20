@@ -6,6 +6,15 @@ Sitecore Assurance is a test tool for Sitecore CMS sites (versions 7.5 and above
 
 Future developments of this tool will enhance the reporting capabilities for integration with an automated site testing process (for example)
 
+## Installation
+
+After building from source, the `Revida.Sitecore.Services.Client.Extensions.dll` should be deployed to the web site `bin` folder for the target Sitecore website.
+
+The `Revida.Sitecore.Assurance.Services.Client.Extensions.config` configuration file should also be deployed to the web site `App_Config\Include` folder.
+
+
+This DLL modifies the output of the Sitecore Services Client web service to include additional information required by the Sitecore Assurance tool.
+
 ## Usage
 
 The Sitecore Assurance command line tool accepts the following command line arguments:

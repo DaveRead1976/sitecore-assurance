@@ -7,7 +7,7 @@ namespace Revida.Sitecore.Assurance.PageCheckers
     {
         protected Uri GeneratePageUrl(string baseUrl, SitecoreItem sitecoreItem)
         {
-            return new Uri($"{baseUrl}/{sitecoreItem.ItemUrl}");
+            return new Uri($"{baseUrl}/{sitecoreItem.ExternalUrl}");
         }
     }
 }

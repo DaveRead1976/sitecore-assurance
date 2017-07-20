@@ -3,13 +3,11 @@ using System.Diagnostics.CodeAnalysis;
 using Moq;
 using NUnit.Framework;
 using OpenQA.Selenium;
+using Revida.Sitecore.Assurance.Model;
 using Revida.Sitecore.Assurance.PageCheckers;
 
 namespace Revida.Sitecore.Assurance.Tests
 {
-    using System.Text;
-    using Model;
-
     [ExcludeFromCodeCoverage]
     [TestFixture]
     public class WebDriverPageCheckerTests
@@ -34,7 +32,7 @@ namespace Revida.Sitecore.Assurance.Tests
             var pageChecker = new WebDriverPageChecker(webDriver.Object, "folder-name");
 
             // Act
-            var status = pageChecker.PageResponseValid("http://baseurl", new SitecoreItem { ItemUrl = "/test", ItemPath = "/sitecore/test"});
+            var status = pageChecker.PageResponseValid("http://baseurl", new SitecoreItem { ExternalUrl = "/test", ItemPath = "/sitecore/test"});
 
             // Assert
             Assert.IsTrue(status.Success);
@@ -60,7 +58,7 @@ namespace Revida.Sitecore.Assurance.Tests
             var pageChecker = new WebDriverPageChecker(webDriver.Object, "folder-name");
 
             // Act
-            var status = pageChecker.PageResponseValid("http://baseurl", new SitecoreItem { ItemUrl = "/test", ItemPath = "/sitecore/test" });
+            var status = pageChecker.PageResponseValid("http://baseurl", new SitecoreItem { ExternalUrl = "/test", ItemPath = "/sitecore/test" });
 
             // Assert
             Assert.IsFalse(status.Success);
@@ -86,7 +84,7 @@ namespace Revida.Sitecore.Assurance.Tests
             var pageChecker = new WebDriverPageChecker(webDriver.Object, "folder-name");
 
             // Act
-            var status = pageChecker.PageResponseValid("http://baseurl", new SitecoreItem { ItemUrl = "/test", ItemPath = "/sitecore/test" });
+            var status = pageChecker.PageResponseValid("http://baseurl", new SitecoreItem { ExternalUrl = "/test", ItemPath = "/sitecore/test" });
 
             // Assert
             Assert.IsFalse(status.Success);

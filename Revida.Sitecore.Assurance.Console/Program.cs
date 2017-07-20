@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Autofac;
-using RestSharp;
 using Revida.Sitecore.Assurance.Configuration;
 using Revida.Sitecore.Assurance.Model;
 using Revida.Sitecore.Assurance.PageCheckers;
@@ -9,104 +8,64 @@ using Revida.Sitecore.Services.Client;
 
 namespace Revida.Sitecore.Assurance.Console
 {
-    using System.Net;
-
     public class Program
     {
         private static IContainer Container { get; set; }
-
-        private static ConfigurationParameters Config { get; set; }
-
+        
         public static void Main(string[] args)
         {
             RegisterIocModules();
-            
-            try
-            {
-                if (ConfigurationFileHelper.ConfigurationFileExists())
-                {
-                    try
-                    {
-                        Config = ConfigurationParameterParser.LoadConfigurationFile();
-                    }
-                    catch (InvalidConfigurationException)
-                    {
-                        // fall back to command line options if cannot load from .config
-                        Config = ConfigurationParameterParser.ParseCommandLineArgs(args);
-                    }
-                }
-                else
-                {
-                    Config = ConfigurationParameterParser.ParseCommandLineArgs(args);                
-                }
-            }
-            catch (InvalidConfigurationException)
+
+            ConfigurationParameters config;
+            if (!ConfigurationFileHelper.LoadConfiguration(args, out config))
             {
                 ShowUsage();
                 return;
             }
 
-            System.Console.WriteLine($"Root Node GUID: {Config.RootNodeId}");
+            List<SitecoreItem> sitecoreItems;
 
-            List<SitecoreItem> sitecoreItems = TraverseSitecoreContentTree();
-
-            System.Console.WriteLine($"{sitecoreItems.Count} Sitecore URLs found in content tree" );
-
-            if (Config.ListUrls)
+            if (!string.IsNullOrWhiteSpace(config.InputFileName))
             {
-                ListSitecoreUrls(sitecoreItems);
+                System.Console.WriteLine($"Loading URL list from {config.InputFileName}");
+
+                var inputFileUrlListRunner = new InputFileUrlListRunner(config);
+                sitecoreItems = inputFileUrlListRunner.Run();
+            }
+            else
+            {
+                System.Console.WriteLine($"Root Node GUID: {config.RootNodeId}");
+
+                var siteTreeTraversalRunner = new SiteTreeTraversalRunner(Container, config);
+                sitecoreItems = siteTreeTraversalRunner.Run();
+            }
+
+            System.Console.WriteLine($"{sitecoreItems.Count} Sitecore URLs in content tree" );
+
+            if (config.ListUrls && string.IsNullOrWhiteSpace(config.InputFileName))
+            {
+                var listItemsRunner = new UrlListingRunner(config);
+                listItemsRunner.Run(sitecoreItems);                
                 return;
             }
 
-            if (Config.RunHttpChecker)
+            if (config.RunHttpChecker)
             {
                 var httpRunner = new HttpPageCheckerRunner(Container);
-                httpRunner.Run(Config, sitecoreItems);
+                httpRunner.Run(config, sitecoreItems);
             }
-            if (Config.RunWebDriverChecker)
+            if (config.RunWebDriverChecker)
             {
                 var webDriverRunner = new WebDriverPageCheckerRunner();
-                webDriverRunner.Run(Config, sitecoreItems);
+                webDriverRunner.Run(config, sitecoreItems);
             }
 
             Environment.Exit(0);
         }
 
-        private static void ListSitecoreUrls(List<SitecoreItem> sitecoreItems)
-        {
-            if (sitecoreItems.Count > 0)
-            {
-                System.Console.WriteLine("Url\tItem path");
-            }
-
-            foreach (SitecoreItem sitecoreItem in sitecoreItems)
-            {                
-                System.Console.WriteLine($"{sitecoreItem.ItemUrl}\t{sitecoreItem.ItemPath}");
-            }
-        }
-        
-        private static List<SitecoreItem> TraverseSitecoreContentTree()
-        {
-            IRestClient restClient = Container.Resolve<IRestClient>();
-            restClient.CookieContainer = new CookieContainer();
-            ISitecoreServiceClient sitecoreServiceClient =  new SitecoreItemServiceClient(restClient, Config);
-
-            try
-            {
-                List<SitecoreItem> sitecoreUrls = sitecoreServiceClient.GetSitecoreCmsTreeUrls();
-                return sitecoreUrls;
-            }
-            catch (ServiceClientAuthorizationException)
-            {
-                System.Console.WriteLine("Unable to connect to Sitecore Services Client with the supplied credentials or anonymous access is not enabled");
-                Environment.Exit(1);
-            }
-            return null;
-        }
-
         private static void RegisterIocModules()
         {
-            ContainerBuilder builder = new ContainerBuilder();
+            var builder = new ContainerBuilder();
             builder.RegisterModule<PageCheckersModule>();
             builder.RegisterModule<ServicesClientModule>();
             Container = builder.Build();
@@ -117,6 +76,5 @@ namespace Revida.Sitecore.Assurance.Console
             System.Console.WriteLine("Usage: sitecore-assurance -r {root node guid} -b {base url} [-u {user name}] [-p {password}] [-d {domain}] [-l] [-h] [-s] ");
             System.Console.WriteLine("       sitecore-assurance --root {root node guid} --baseurl {base url} [--username {user name}] [--password {password}] [--domain {domain}] [--list] [--http] [--selenium]");
         }
-
     }
 }

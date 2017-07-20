@@ -7,31 +7,37 @@ using Revida.Sitecore.Assurance.PageCheckers;
 
 namespace Revida.Sitecore.Assurance.Console
 {
-
-    public class WebDriverPageCheckerRunner
+    public class WebDriverPageCheckerRunner : RunnerBase
     {
+        private const string OutputFilename = "webdriver-test-results";
+
         public void Run(ConfigurationParameters config, List<SitecoreItem> sitecoreItems)
         {
             string screenShotsFolder = CreateScreenShotDirectory();
 
-            WebDriverPageChecker checker = new WebDriverPageChecker(screenShotsFolder);
+            var checker = new WebDriverPageChecker(screenShotsFolder);
 
+            FileStream outputFile = CreateOutputFile(OutputFilename);
+            StreamWriter writer = new StreamWriter(outputFile);
             int index = 0;
-
+            
             foreach (SitecoreItem sitecoreItem in sitecoreItems)
             {
                 if (index == 0)
                 {
-                    System.Console.WriteLine("Success?\tItem path");
+                    writer.WriteLine("Full URL,Success?,Item path");
                 }
 
                 PageCheckResult result = checker.PageResponseValid(config.BaseUrl, sitecoreItem);
 
-                System.Console.WriteLine($"{result?.Success}\t{sitecoreItem.ItemPath}");
+                writer.WriteLine($"{config.BaseUrl}{sitecoreItem.ExternalUrl},{result?.Success},{sitecoreItem.ItemPath}");
                 index++;
             }
 
             checker.Close();
+
+            writer.Flush();
+            writer.Close();
         }
 
         private string CreateScreenShotDirectory()

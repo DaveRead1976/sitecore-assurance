@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using Autofac;
 using Revida.Sitecore.Assurance.Configuration;
 using Revida.Sitecore.Assurance.Model;
@@ -6,8 +7,10 @@ using Revida.Sitecore.Assurance.PageCheckers;
 
 namespace Revida.Sitecore.Assurance.Console
 {
-    public class HttpPageCheckerRunner
+    public class HttpPageCheckerRunner : RunnerBase
     {
+        private const string OutputFilename = "http-status-code-test-results";
+
         private IContainer Container { get; }
 
         public HttpPageCheckerRunner(IContainer container)
@@ -17,19 +20,27 @@ namespace Revida.Sitecore.Assurance.Console
 
         public void Run(ConfigurationParameters config, List<SitecoreItem> sitecoreItems)
         {
-            if (sitecoreItems.Count > 0)
+            if (sitecoreItems.Count == 0)
             {
-                System.Console.WriteLine("Success?\tStatus Code\tItem path");
+                return;
             }
 
-            HttpResponsePageChecker checker = Container.Resolve<HttpResponsePageChecker>();
+            FileStream outputFile = CreateOutputFile(OutputFilename);
+            var writer = new StreamWriter(outputFile);
+
+            writer.WriteLine("Full URL,Success?,Status Code,Item path");
+
+            var checker = Container.Resolve<HttpResponsePageChecker>();
 
             foreach (SitecoreItem sitecoreItem in sitecoreItems)
             {                
-                HttpPageCheckResult result = checker.PageResponseValid(config.BaseUrl, sitecoreItem) as HttpPageCheckResult;
+                var result = checker.PageResponseValid(config.BaseUrl, sitecoreItem) as HttpPageCheckResult;
 
-                System.Console.WriteLine($"{result?.Success}\t{result?.StatusCode}\t{sitecoreItem.ItemPath}");
+                writer.WriteLine($"{config.BaseUrl}{sitecoreItem.ExternalUrl},{result?.Success},{result?.StatusCode},{sitecoreItem.ItemPath}");
             }
+
+            writer.Flush();
+            writer.Close();
         }
     }
 }

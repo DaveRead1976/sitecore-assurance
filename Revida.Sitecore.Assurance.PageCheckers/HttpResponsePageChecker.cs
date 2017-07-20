@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Net;
+using Revida.Sitecore.Assurance.Model;
 
 namespace Revida.Sitecore.Assurance.PageCheckers
 {
-    using Model;
-
+    
     public class HttpResponsePageChecker : BasePageChecker, IPageChecker
     {
         private IHttpWebRequestFactory RequestFactory { get; }
@@ -37,8 +37,11 @@ namespace Revida.Sitecore.Assurance.PageCheckers
                 }
 
                 HttpWebResponse exceptionResponse = (HttpWebResponse) webException.Response;
-
-                return new HttpPageCheckResult { Success = false, StatusCode = exceptionResponse.StatusCode };
+                if (exceptionResponse != null)
+                {
+                    return new HttpPageCheckResult {Success = false, StatusCode = exceptionResponse.StatusCode};
+                }
+                return new HttpPageCheckResult {Success = false, StatusCode = HttpStatusCode.BadRequest};
             }
         }
     }

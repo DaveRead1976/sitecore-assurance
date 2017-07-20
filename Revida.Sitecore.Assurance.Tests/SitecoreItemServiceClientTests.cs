@@ -32,7 +32,7 @@ namespace Revida.Sitecore.Assurance.Tests
                 HasChildren = false,
                 ItemID = Guid.NewGuid(),
                 ItemPath = "/path/to/item",
-                ItemUrl = "/item/root"
+                ExternalUrl = "/item/root"
             };
 
             var restClient = new Mock<IRestClient>();
@@ -97,7 +97,7 @@ namespace Revida.Sitecore.Assurance.Tests
                 HasChildren = false,
                 ItemID = Guid.NewGuid(),
                 ItemPath = "/path/to/item",
-                ItemUrl = "/item/root"
+                ExternalUrl = "/item/root"
             };
 
             var restClient = new Mock<IRestClient>();
@@ -138,7 +138,7 @@ namespace Revida.Sitecore.Assurance.Tests
                 HasChildren = false,
                 ItemID = Guid.NewGuid(),
                 ItemPath = "/path/to/item",
-                ItemUrl = "/item/root"
+                ExternalUrl = "/item/root"
             };
 
             var itemList = new List<SitecoreItem>
@@ -149,7 +149,7 @@ namespace Revida.Sitecore.Assurance.Tests
                     HasChildren = false,
                     ItemID = Guid.NewGuid(),
                     ItemPath = "/path/to/item",
-                    ItemUrl = "http://baseurl.com/item/url"
+                    ExternalUrl = "http://baseurl.com/item/url"
                 }
             };
 
@@ -188,7 +188,7 @@ namespace Revida.Sitecore.Assurance.Tests
                 HasChildren = false,
                 ItemID = Guid.NewGuid(),
                 ItemPath = "/path/to/item",
-                ItemUrl = "/item/root"
+                ExternalUrl = "/item/root"
             };
 
             var itemList = new List<SitecoreItem>
@@ -199,7 +199,7 @@ namespace Revida.Sitecore.Assurance.Tests
                     HasChildren = false,
                     ItemID = Guid.NewGuid(),
                     ItemPath = "/path/to/item",
-                    ItemUrl = "/item/url"
+                    ExternalUrl = "/item/url"
                 },
                 new SitecoreItem
                 {
@@ -207,7 +207,7 @@ namespace Revida.Sitecore.Assurance.Tests
                     HasChildren = false,
                     ItemID = Guid.NewGuid(),
                     ItemPath = "/path/to/item2",
-                    ItemUrl = "/item/url2"
+                    ExternalUrl = "/item/url2"
                 }
             };
 
@@ -247,7 +247,7 @@ namespace Revida.Sitecore.Assurance.Tests
                 HasChildren = true,
                 ItemID = Guid.NewGuid(),
                 ItemPath = "/path/to/item",
-                ItemUrl = "/item/home"
+                ExternalUrl = "/item/home"
             };
 
             var topLevelResponse = new RestResponse<SitecoreItem> { Data = topLevelItem, StatusCode = HttpStatusCode.OK };
@@ -260,7 +260,7 @@ namespace Revida.Sitecore.Assurance.Tests
                     HasChildren = true,
                     ItemID = Guid.NewGuid(),
                     ItemPath = "/path/to/item",
-                    ItemUrl = "/item/url"
+                    ExternalUrl = "/item/url"
                 },
                 new SitecoreItem
                 {
@@ -268,7 +268,7 @@ namespace Revida.Sitecore.Assurance.Tests
                     HasChildren = true,
                     ItemID = Guid.NewGuid(),
                     ItemPath = "/path/to/item2",
-                    ItemUrl = "/item/url2"
+                    ExternalUrl = "/item/url2"
                 }
             };
             var topLevelChildrenResponse = new RestResponse<List<SitecoreItem>> {  Data = topLevelItemList, StatusCode = HttpStatusCode.OK };
@@ -281,7 +281,7 @@ namespace Revida.Sitecore.Assurance.Tests
                     HasChildren = false,
                     ItemID = Guid.NewGuid(),
                     ItemPath = "/path/to/item/child1",
-                    ItemUrl = "/item/url/child1"
+                    ExternalUrl = "/item/url/child1"
                 },
                 new SitecoreItem
                 {
@@ -289,7 +289,7 @@ namespace Revida.Sitecore.Assurance.Tests
                     HasChildren = false,
                     ItemID = Guid.NewGuid(),
                     ItemPath = "/path/to/item/child2",
-                    ItemUrl = "/item/url/child2"
+                    ExternalUrl = "/item/url/child2"
                 }
             };
 
@@ -303,7 +303,7 @@ namespace Revida.Sitecore.Assurance.Tests
                     HasChildren = false,
                     ItemID = Guid.NewGuid(),
                     ItemPath = "/path/to/item/child1",
-                    ItemUrl = "/item/url2/child3"
+                    ExternalUrl = "/item/url2/child3"
                 },
                 new SitecoreItem
                 {
@@ -311,7 +311,7 @@ namespace Revida.Sitecore.Assurance.Tests
                     HasChildren = false,
                     ItemID = Guid.NewGuid(),
                     ItemPath = "/path/to/item/child2",
-                    ItemUrl = "/item/url2/child4"
+                    ExternalUrl = "/item/url2/child4"
                 }
             };
 
@@ -330,13 +330,13 @@ namespace Revida.Sitecore.Assurance.Tests
             // Assert
             Assert.IsNotNull(urlList);
             Assert.AreEqual(7, urlList.Length);
-            Assert.AreEqual("/item/home", urlList[0].ItemUrl);
-            Assert.AreEqual("/item/url", urlList[1].ItemUrl);
-            Assert.AreEqual("/item/url/child1", urlList[2].ItemUrl);
-            Assert.AreEqual("/item/url/child2", urlList[3].ItemUrl);
-            Assert.AreEqual("/item/url2", urlList[4].ItemUrl);
-            Assert.AreEqual("/item/url2/child3", urlList[5].ItemUrl);
-            Assert.AreEqual("/item/url2/child4", urlList[6].ItemUrl);
+            Assert.AreEqual("/item/home", urlList[0].ExternalUrl);
+            Assert.AreEqual("/item/url", urlList[1].ExternalUrl);
+            Assert.AreEqual("/item/url/child1", urlList[2].ExternalUrl);
+            Assert.AreEqual("/item/url/child2", urlList[3].ExternalUrl);
+            Assert.AreEqual("/item/url2", urlList[4].ExternalUrl);
+            Assert.AreEqual("/item/url2/child3", urlList[5].ExternalUrl);
+            Assert.AreEqual("/item/url2/child4", urlList[6].ExternalUrl);
         }
 
         [Test]
@@ -357,7 +357,7 @@ namespace Revida.Sitecore.Assurance.Tests
                 HasChildren = true,
                 ItemID = Guid.NewGuid(),
                 ItemPath = "/path/to/item",
-                ItemUrl = "/item/root"
+                ExternalUrl = "/item/root"
             };
 
             var rootResponse = new RestResponse<SitecoreItem> {Data = rootItem, StatusCode = HttpStatusCode.OK};
@@ -370,7 +370,7 @@ namespace Revida.Sitecore.Assurance.Tests
                     HasChildren = true,
                     ItemID = Guid.NewGuid(),
                     ItemPath = "/path/to/item",
-                    ItemUrl = "/item/url"
+                    ExternalUrl = "/item/url"
                 },
                 new SitecoreItem
                 {
@@ -378,7 +378,7 @@ namespace Revida.Sitecore.Assurance.Tests
                     HasChildren = true,
                     ItemID = Guid.NewGuid(),
                     ItemPath = "/path/to/item2",
-                    ItemUrl = "/item/url2"
+                    ExternalUrl = "/item/url2"
                 }
             };
 
@@ -392,7 +392,7 @@ namespace Revida.Sitecore.Assurance.Tests
                     HasChildren = false,
                     ItemID = Guid.NewGuid(),
                     ItemPath = "/path/to/item/child1",
-                    ItemUrl = "/item/url/child1"
+                    ExternalUrl = "/item/url/child1"
                 },
                 new SitecoreItem
                 {
@@ -400,7 +400,7 @@ namespace Revida.Sitecore.Assurance.Tests
                     HasChildren = true,
                     ItemID = Guid.NewGuid(),
                     ItemPath = "/path/to/item/child2",
-                    ItemUrl = "/item/url/child2"
+                    ExternalUrl = "/item/url/child2"
                 }
             };
 
@@ -414,7 +414,7 @@ namespace Revida.Sitecore.Assurance.Tests
                     HasChildren = false,
                     ItemID = Guid.NewGuid(),
                     ItemPath = "/path/to/item/child2/item1",
-                    ItemUrl = "/item/url/child2/subchild1"
+                    ExternalUrl = "/item/url/child2/subchild1"
                 },
                 new SitecoreItem
                 {
@@ -422,7 +422,7 @@ namespace Revida.Sitecore.Assurance.Tests
                     HasChildren = false,
                     ItemID = Guid.NewGuid(),
                     ItemPath = "/path/to/item/child2/item2",
-                    ItemUrl = "/item/url/child2/subchild2"
+                    ExternalUrl = "/item/url/child2/subchild2"
                 }
             };
 
@@ -436,7 +436,7 @@ namespace Revida.Sitecore.Assurance.Tests
                     HasChildren = true,
                     ItemID = Guid.NewGuid(),
                     ItemPath = "/path/to/item/child1",
-                    ItemUrl = "/item/url2/child3"
+                    ExternalUrl = "/item/url2/child3"
                 },
                 new SitecoreItem
                 {
@@ -444,7 +444,7 @@ namespace Revida.Sitecore.Assurance.Tests
                     HasChildren = false,
                     ItemID = Guid.NewGuid(),
                     ItemPath = "/path/to/item/child2",
-                    ItemUrl = "/item/url2/child4"
+                    ExternalUrl = "/item/url2/child4"
                 }
             };
 
@@ -458,7 +458,7 @@ namespace Revida.Sitecore.Assurance.Tests
                     HasChildren = false,
                     ItemID = Guid.NewGuid(),
                     ItemPath = "/path/to/item/child3/item1",
-                    ItemUrl = "/item/url/child3/subchild1"
+                    ExternalUrl = "/item/url/child3/subchild1"
                 },
                 new SitecoreItem
                 {
@@ -466,7 +466,7 @@ namespace Revida.Sitecore.Assurance.Tests
                     HasChildren = false,
                     ItemID = Guid.NewGuid(),
                     ItemPath = "/path/to/item/child3/item2",
-                    ItemUrl = "/item/url/child3/subchild2"
+                    ExternalUrl = "/item/url/child3/subchild2"
                 }
             };
 
@@ -485,17 +485,17 @@ namespace Revida.Sitecore.Assurance.Tests
             // Assert
             Assert.IsNotNull(urlList);
             Assert.AreEqual(11, urlList.Length);
-            Assert.AreEqual("/item/root", urlList[0].ItemUrl);
-            Assert.AreEqual("/item/url", urlList[1].ItemUrl);
-            Assert.AreEqual("/item/url/child1", urlList[2].ItemUrl);
-            Assert.AreEqual("/item/url/child2", urlList[3].ItemUrl);
-            Assert.AreEqual("/item/url/child2/subchild1", urlList[4].ItemUrl);
-            Assert.AreEqual("/item/url/child2/subchild2", urlList[5].ItemUrl);                        
-            Assert.AreEqual("/item/url2", urlList[6].ItemUrl);
-            Assert.AreEqual("/item/url2/child3", urlList[7].ItemUrl);
-            Assert.AreEqual("/item/url/child3/subchild1", urlList[8].ItemUrl);
-            Assert.AreEqual("/item/url/child3/subchild2", urlList[9].ItemUrl);
-            Assert.AreEqual("/item/url2/child4", urlList[10].ItemUrl);
+            Assert.AreEqual("/item/root", urlList[0].ExternalUrl);
+            Assert.AreEqual("/item/url", urlList[1].ExternalUrl);
+            Assert.AreEqual("/item/url/child1", urlList[2].ExternalUrl);
+            Assert.AreEqual("/item/url/child2", urlList[3].ExternalUrl);
+            Assert.AreEqual("/item/url/child2/subchild1", urlList[4].ExternalUrl);
+            Assert.AreEqual("/item/url/child2/subchild2", urlList[5].ExternalUrl);                        
+            Assert.AreEqual("/item/url2", urlList[6].ExternalUrl);
+            Assert.AreEqual("/item/url2/child3", urlList[7].ExternalUrl);
+            Assert.AreEqual("/item/url/child3/subchild1", urlList[8].ExternalUrl);
+            Assert.AreEqual("/item/url/child3/subchild2", urlList[9].ExternalUrl);
+            Assert.AreEqual("/item/url2/child4", urlList[10].ExternalUrl);
         }
 
         [Test]        
@@ -545,7 +545,7 @@ namespace Revida.Sitecore.Assurance.Tests
                 HasChildren = false,
                 ItemID = Guid.NewGuid(),
                 ItemPath = "/path/to/item",
-                ItemUrl = "/item/root"
+                ExternalUrl = "/item/root"
             };
             
             var rootResponse = new RestResponse<SitecoreItem> { Data = rootNode, StatusCode = HttpStatusCode.OK };

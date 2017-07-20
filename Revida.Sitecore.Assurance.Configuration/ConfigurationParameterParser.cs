@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
+using System.Configuration;
+using System.IO;
+using System.Reflection;
 using CommandLine;
 
 namespace Revida.Sitecore.Assurance.Configuration
 {
-    using System.Configuration;
 
     public class ConfigurationParameterParser
     {
@@ -29,9 +32,10 @@ namespace Revida.Sitecore.Assurance.Configuration
             return BuildConfigurationParameters(options);
         }
 
+        [ExcludeFromCodeCoverage]
         public static ConfigurationParameters LoadConfigurationFile()
         {
-            NameValueCollection configurationSettings = ConfigurationManager.GetSection("SitecoreAssurance") as NameValueCollection;
+            var configurationSettings = ConfigurationManager.GetSection("SitecoreAssurance") as NameValueCollection;
 
             if (configurationSettings == null)
             {
@@ -40,7 +44,7 @@ namespace Revida.Sitecore.Assurance.Configuration
 
             try
             {
-                ConfigurationParameters configurationParameters = new ConfigurationParameters
+                var configurationParameters = new ConfigurationParameters
                 {
                     BaseUrl = configurationSettings["BaseUrl"],
                     ListUrls = Convert.ToBoolean(configurationSettings["ListUrls"]),
@@ -49,7 +53,8 @@ namespace Revida.Sitecore.Assurance.Configuration
                     RunWebDriverChecker = Convert.ToBoolean(configurationSettings["RunWebDriverChecker"]),
                     Domain = configurationSettings["Domain"],
                     UserName = configurationSettings["UserName"],
-                    Password = configurationSettings["Password"]
+                    Password = configurationSettings["Password"],
+                    InputFileName = configurationSettings["InputFilename"]
                 };
                 return configurationParameters;
             }
@@ -67,6 +72,8 @@ namespace Revida.Sitecore.Assurance.Configuration
 
             ParseBaseUrlParameter(options.BaseUrl, parameters);
 
+            ParseInputFilenameParameter(options.InputFileName, parameters);
+
             parameters.ListUrls = options.ListUrls;
             parameters.RunHttpChecker = options.RunHttpChecker;
             parameters.RunWebDriverChecker = options.RunWebDriverChecker;
@@ -76,10 +83,10 @@ namespace Revida.Sitecore.Assurance.Configuration
             
             return parameters;
         }
-
+        
         private static void ParseRootNodeParameter(string root, ConfigurationParameters parameters)
         {
-            if (!String.IsNullOrEmpty(root))
+            if (!string.IsNullOrEmpty(root))
             {
                 Guid rootNodeGuid;
                 var isValid = Guid.TryParse(root, out rootNodeGuid);
@@ -111,6 +118,32 @@ namespace Revida.Sitecore.Assurance.Configuration
                 }
             }
             throw new InvalidConfigurationException("Base url is required");        
+        }
+        
+        private static void ParseInputFilenameParameter(string inputFileName, ConfigurationParameters parameters)
+        {
+            if (string.IsNullOrEmpty(inputFileName))
+            {
+                return;
+            }
+
+            // test if fully qualified path 
+            if (File.Exists(inputFileName))
+            {
+                parameters.InputFileName = inputFileName;
+                return;
+            }
+
+            // test if path relative to executable
+            var assembly = Assembly.GetExecutingAssembly();            
+            var absoluteFilePath = Path.Combine(assembly.Location, inputFileName);
+
+            if (!File.Exists(absoluteFilePath))
+            {
+                throw new InvalidConfigurationException("Invalid input filename supplied");
+            }
+
+            parameters.InputFileName = absoluteFilePath;            
         }
     }
 }

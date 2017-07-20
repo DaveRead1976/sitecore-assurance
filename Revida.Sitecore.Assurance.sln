@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Revida.Sitecore.Assurance.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Revida.Sitecore.Assurance.Model", "Revida.Sitecore.Assurance.Model\Revida.Sitecore.Assurance.Model.csproj", "{FDF835A1-4FA8-4940-A49C-B9939D9A52D1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Revida.Sitecore.Services.Client.Extensions", "Revida.Sitecore.Services.Client.Extensions\Revida.Sitecore.Services.Client.Extensions.csproj", "{F6F13E19-3C7F-4652-B7C0-B2B892F55C16}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{FDF835A1-4FA8-4940-A49C-B9939D9A52D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FDF835A1-4FA8-4940-A49C-B9939D9A52D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FDF835A1-4FA8-4940-A49C-B9939D9A52D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6F13E19-3C7F-4652-B7C0-B2B892F55C16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6F13E19-3C7F-4652-B7C0-B2B892F55C16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6F13E19-3C7F-4652-B7C0-B2B892F55C16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6F13E19-3C7F-4652-B7C0-B2B892F55C16}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
